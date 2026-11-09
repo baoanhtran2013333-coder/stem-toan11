@@ -1,67 +1,120 @@
 import math
+import streamlit as st
 
-def giai_phuong_trinh_luong_giac():
-    print("\n--- GIẢI PHƯƠNG TRÌNH sin(x) = a ---")
-    try:
-        a = float(input("Nhập giá trị a (-1 <= a <= 1): "))
-        if a < -1 or a > 1:
-            print("Lỗi: Giá trị a phải nằm trong khoảng [-1, 1]!")
-            return
-        rad = math.asin(a)
-        deg = math.degrees(rad)
-        print(f"=> Nghiệm Radian: x = {rad:.4f} + k2π hoặc x = {math.pi - rad:.4f} + k2π (k ∈ Z)")
-        print(f"=> Nghiệm Độ: x = {deg:.2f}° + k360° hoặc x = {180 - deg:.2f}° + k360° (k ∈ Z)")
-    except ValueError:
-        print("Vui lòng nhập số thực hợp lệ!")
+# Cấu hình giao diện trang web
+st.set_page_config(
+    page_title="STEM Toán 11 - Công Cụ Hỗ Trợ Học Tập",
+    page_icon="📐",
+    layout="centered",
+)
 
-def cap_so_cong():
-    print("\n--- TÍNH CẤP SỐ CỘNG ---")
-    try:
-        u1 = float(input("Nhập số hạng đầu (u1): "))
-        d = float(input("Nhập công sai (d): "))
-        n = int(input("Nhập số hạng thứ n: "))
-        un = u1 + (n - 1) * d
-        sn = (n * (u1 + un)) / 2
-        print(f"=> Số hạng thứ {n} (u_{n}) = {un}")
-        print(f"=> Tổng {n} số hạng đầu (S_{n}) = {sn}")
-    except ValueError:
-        print("Dữ liệu không hợp lệ!")
+# Tiêu đề chính ứng dụng
+st.title("📐 CHƯƠNG TRÌNH STEM TOÁN 11")
+st.markdown(
+    "*Công cụ hỗ trợ học tập môn Toán lớp 11 trực quan, sinh động.*"
+)
+st.markdown("---")
 
-def tinh_xac_suat():
-    print("\n--- TÍNH XÁC SUẤT P(A) ---")
-    try:
-        nA = int(input("Nhập số kết quả thuận lợi n(A): "))
-        nOmega = int(input("Nhập tổng số kết quả n(Ω): "))
-        if nOmega <= 0 or nA < 0 or nA > nOmega:
-            print("Lỗi dữ liệu!")
-            return
-        P = nA / nOmega
-        print(f"=> Xác suất P(A) = {nA}/{nOmega} = {P:.4f} ({P*100:.2f}%)")
-    except ValueError:
-        print("Dữ liệu không hợp lệ!")
+# Menu chọn chức năng ở thanh bên (Sidebar)
+st.sidebar.header("📋 Danh mục chức năng")
+menu = st.sidebar.selectbox(
+    "Chọn tính năng bạn muốn sử dụng:",
+    [
+        "1. Giải phương trình sin(x) = a",
+        "2. Tính Cấp số cộng",
+        "3. Tính Xác suất P(A)",
+    ],
+)
 
-def main():
-    while True:
-        print("\n==========================================")
-        print("   CHƯƠNG TRÌNH STEM TOÁN 11 - PYTHON     ")
-        print("==========================================")
-        print("1. Giải phương trình sin(x) = a")
-        print("2. Tính Cấp số cộng")
-        print("3. Tính Xác suất P(A)")
-        print("0. Thoát")
-        
-        chon = input("Chọn chức năng (0-3): ")
-        if chon == '1':
-            giai_phuong_trinh_luong_giac()
-        elif chon == '2':
-            cap_so_cong()
-        elif chon == '3':
-            tinh_xac_suat()
-        elif chon == '0':
-            print("Tạm biệt!")
-            break
-        else:
-            print("Lựa chọn không hợp lệ.")
+# ----------------- CHỨC NĂNG 1: GIẢI PHƯƠNG TRÌNH SIN(X) = A -----------------
+if menu == "1. Giải phương trình sin(x) = a":
+  st.header("🔍 Giải phương trình lượng giác: $\\sin(x) = a$")
+  st.write("Nhập hệ số $a$ để tìm nghiệm của phương trình.")
 
-if __name__ == "__main__":
-    main()
+  a = st.number_input("Nhập giá trị a (từ -1 đến 1):", value=0.5, step=0.1)
+
+  if st.button("Tính nghiệm", type="primary"):
+    if -1 <= a <= 1:
+      alpha_rad = math.asin(a)
+      alpha_deg = math.degrees(alpha_rad)
+
+      st.success("✅ Phương trình có nghiệm:")
+      st.latex(f"x = {alpha_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{Z})")
+      st.latex(
+          f"x = \\pi - {alpha_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{Z})"
+      )
+
+      st.info(
+          f"💡 **Giá trị góc (độ):** $\\alpha \\approx {alpha_deg:.2f}^\\circ$"
+      )
+    else:
+      st.error(
+          "❌ Giá trị $a$ phải nằm trong đoạn từ $-1$ đến $1$ thì phương trình"
+          " mới có nghiệm!"
+      )
+
+# ----------------- CHỨC NĂNG 2: TÍNH CẤP SỐ CỘNG -----------------
+elif menu == "2. Tính Cấp số cộng":
+  st.header("📈 Tính toán Cấp số cộng $(u_n)$")
+  st.write(
+      "Cho cấp số cộng có số hạng đầu $u_1$, công sai $d$ và số lượng số hạng"
+      " $n$."
+  )
+
+  col1, col2, col3 = st.columns(3)
+  with col1:
+    u1 = st.number_input("Số hạng đầu (u₁):", value=1.0, step=1.0)
+  with col2:
+    d = st.number_input("Công sai (d):", value=2.0, step=1.0)
+  with col3:
+    n = st.number_input("Số lượng số hạng (n):", value=5, min_value=1, step=1)
+
+  if st.button("Tính kết quả", type="primary"):
+    n_int = int(n)
+    un = u1 + (n_int - 1) * d
+    sn = (n_int * (2 * u1 + (n_int - 1) * d)) / 2
+
+    st.success("📊 Kết quả tính toán:")
+    st.metric(label=f"Số hạng thứ {n_int} (uₙ)", value=f"{un}")
+    st.metric(label=f"Tổng {n_int} số hạng đầu tiên (Sₙ)", value=f"{sn}")
+
+# ----------------- CHỨC NĂNG 3: TÍNH XÁC SUẤT P(A) -----------------
+elif menu == "3. Tính Xác suất P(A)":
+  st.header("🎲 Tính Xác suất Biến cố $P(A)$")
+  st.write("Công thức: $P(A) = \\frac{n(A)}{n(\\Omega)}$")
+
+  col1, col2 = st.columns(2)
+  with col1:
+    n_A = st.number_input(
+        "Số kết quả thuận lợi cho biến cố A n(A):",
+        value=2,
+        min_value=0,
+        step=1,
+    )
+  with col2:
+    n_Omega = st.number_input(
+        "Số phần tử của không gian mẫu n(Ω):",
+        value=6,
+        min_value=1,
+        step=1,
+    )
+
+  if st.button("Tính xác suất", type="primary"):
+    if n_A <= n_Omega:
+      p_a = n_A / n_Omega
+      st.success("🎯 Kết quả:")
+      st.metric(label="Xác suất P(A)", value=f"{p_a:.4f}")
+      st.write(f"Tương đương với tỉ lệ: **{p_a * 100:.2f}%**")
+    else:
+      st.error(
+          "❌ Số phần tử của biến cố $n(A)$ không thể lớn hơn không gian mẫu"
+          " $n(\\Omega)$ được!"
+      )
+
+# Phần chân trang
+st.markdown("---")
+st.markdown(
+    "<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Thực"
+    " hiện bằng Python & Streamlit</p>",
+    unsafe_allow_html=True,
+)
