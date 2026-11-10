@@ -1,4 +1,6 @@
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 import streamlit as st
 
 st.set_page_config(page_title="STEM Toán 11", page_icon="📐", layout="centered")
@@ -14,6 +16,7 @@ menu = st.sidebar.selectbox(
         "1. Giải phương trình sin(x) = a",
         "2. Tính Cấp số cộng",
         "3. Tính Xác suất P(A)",
+        "4. Hình học không gian (Bài 10, 11, 12)",
     ],
 )
 
@@ -26,7 +29,6 @@ if menu == "1. Giải phương trình sin(x) = a":
       alpha_rad = math.asin(a)
       alpha_deg = math.degrees(alpha_rad)
 
-      # Nhận diện các giá trị góc đặc biệt chuẩn không cần làm tròn
       eps = 1e-3
       if abs(a - 0) < eps:
         str_arcsin = "0"
@@ -106,10 +108,93 @@ elif menu == "3. Tính Xác suất P(A)":
       st.metric(label="Xác suất P(A)", value=f"{p_a:.4f}")
       st.write(f"Tương đương với tỉ lệ: **{p_a * 100:.2f}%**")
     else:
-      st.error(
-          "❌ Số phần tử của biến cố $n(A)$ không thể lớn hơn không gian mẫu"
-          " $n(\\Omega)$!"
-      )
+      st.error("❌ Số phần tử của biến cố $n(A)$ không thể lớn hơn không gian mẫu!")
+
+elif menu == "4. Hình học không gian (Bài 10, 11, 12)":
+  st.header("📐 Hình học không gian lớp 11")
+
+  sub_choice = st.radio(
+      "Chọn nội dung hình học:",
+      [
+          "Bài 10: Đường thẳng và mặt phẳng trong không gian",
+          "Bài 11: Hai đường thẳng song song",
+          "Bài 12: Đường thẳng và mặt phẳng song song",
+      ],
+  )
+
+  if sub_choice == "Bài 10: Đường thẳng và mặt phẳng trong không gian":
+    st.subheader("1. Khái niệm & Minh họa mặt phẳng $(\\alpha)$ và đường thẳng $d$")
+    st.markdown(
+        "- **Mặt phẳng $(\\alpha)$** hoàn toàn xác định khi biết 3 điểm không"
+        " thẳng hàng.\n- Nếu đường thẳng $d$ có 2 điểm phân biệt thuộc mặt phẳng"
+        " $(\\alpha)$ thì mọi điểm của $d$ đều thuộc $(\\alpha)$."
+    )
+
+    # Vẽ hình minh họa 3D mặt phẳng và đường thẳng
+    fig = plt.figure(figsize=(6, 5))
+    ax = fig.add_subplot(111, projection="3d")
+
+    # Vẽ mặt phẳng
+    xx, yy = np.meshgrid(range(-2, 3), range(-2, 3))
+    zz = np.zeros(xx.shape)
+    ax.plot_surface(xx, yy, zz, alpha=0.3, color="cyan")
+
+    # Vẽ đường thẳng cắt mặt phẳng
+    xd = np.array([-1, 1])
+    yd = np.array([-1, 1])
+    zd = np.array([-2, 2])
+    ax.plot(xd, yd, zd, color="red", linewidth=3, label="Đường thẳng d")
+
+    ax.set_title("Minh họa Đường thẳng cắt Mặt phẳng")
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    st.pyplot(fig)
+
+  elif sub_choice == "Bài 11: Hai đường thẳng song song":
+    st.subheader("2. Vị trí tương đối của hai đường thẳng trong không gian")
+    st.markdown(
+        "- Hai đường thẳng **song song** là hai đường thẳng nằm trong cùng một"
+        " mặt phẳng và không có điểm chung.\n- Định lý: Giao tuyến của ba mặt"
+        " phẳng..."
+    )
+
+    # Vẽ hình minh họa hai đường thẳng song song
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot([1, 5], [2, 2], color="blue", linewidth=3, label="Đường thẳng a")
+    ax.plot([1, 5], [4, 4], color="green", linewidth=3, label="Đường thẳng b")
+    ax.text(3, 2.2, "a", fontsize=12, color="blue")
+    ax.text(3, 4.2, "b", fontsize=12, color="green")
+    ax.set_xlim(0, 6)
+    ax.set_ylim(0, 6)
+    ax.axis("off")
+    ax.set_title("Minh họa Hai đường thẳng song song trong không gian")
+    st.pyplot(fig)
+
+  elif sub_choice == "Bài 12: Đường thẳng và mặt phẳng song song":
+    st.subheader("3. Đường thẳng song song với mặt phẳng")
+    st.markdown(
+        "- Nếu đường thẳng $d$ không thuộc mặt phẳng $(\\alpha)$ và song song"
+        " với một đường thẳng nằm trong $(\\alpha)$ thì $d \\parallel"
+        " (\\alpha)$."
+    )
+
+    # Vẽ hình minh họa đường thẳng song song với mặt phẳng
+    fig = plt.figure(figsize=(6, 5))
+    ax = fig.add_subplot(111, projection="3d")
+
+    xx, yy = np.meshgrid(range(-2, 3), range(-2, 3))
+    zz = np.zeros(xx.shape)
+    ax.plot_surface(xx, yy, zz, alpha=0.3, color="orange")
+
+    # Đường thẳng song song phía trên mặt phẳng
+    xd = np.array([-2, 2])
+    yd = np.array([-2, 2])
+    zd = np.array([1.5, 1.5])
+    ax.plot(xd, yd, zd, color="purple", linewidth=3, label="Đường thẳng d || (α)")
+
+    ax.set_title("Đường thẳng song song với Mặt phẳng")
+    st.pyplot(fig)
 
 st.markdown("---")
 st.markdown(
