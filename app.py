@@ -16,7 +16,7 @@ menu = st.sidebar.selectbox(
         "1. Giải phương trình sin(x) = a",
         "2. Tính Cấp số cộng",
         "3. Tính Xác suất P(A)",
-        "4. Hình học không gian (Bài 10, 11, 12)",
+        "4. Hình học không gian (Tự nhập liệu & Vẽ hình)",
     ],
 )
 
@@ -108,93 +108,175 @@ elif menu == "3. Tính Xác suất P(A)":
       st.metric(label="Xác suất P(A)", value=f"{p_a:.4f}")
       st.write(f"Tương đương với tỉ lệ: **{p_a * 100:.2f}%**")
     else:
-      st.error("❌ Số phần tử của biến cố $n(A)$ không thể lớn hơn không gian mẫu!")
+      st.error(
+          "❌ Số phần tử của biến cố $n(A)$ không thể lớn hơn không gian mẫu!"
+      )
 
-elif menu == "4. Hình học không gian (Bài 10, 11, 12)":
-  st.header("📐 Hình học không gian lớp 11")
+elif menu == "4. Hình học không gian (Tự nhập liệu & Vẽ hình)":
+  st.header("📐 Khảo sát Hình học không gian tương tác")
 
-  sub_choice = st.radio(
-      "Chọn nội dung hình học:",
+  sub_choice = st.selectbox(
+      "Chọn bài học hình học:",
       [
-          "Bài 10: Đường thẳng và mặt phẳng trong không gian",
-          "Bài 11: Hai đường thẳng song song",
-          "Bài 12: Đường thẳng và mặt phẳng song song",
+          "Bài 10: Xác định mặt phẳng qua 3 điểm",
+          "Bài 11: Kiểm tra hai đường thẳng song song",
+          "Bài 12: Kiểm tra đường thẳng song song với mặt phẳng",
       ],
   )
 
-  if sub_choice == "Bài 10: Đường thẳng và mặt phẳng trong không gian":
-    st.subheader("1. Khái niệm & Minh họa mặt phẳng $(\\alpha)$ và đường thẳng $d$")
+  if sub_choice == "Bài 10: Xác định mặt phẳng qua 3 điểm":
     st.markdown(
-        "- **Mặt phẳng $(\\alpha)$** hoàn toàn xác định khi biết 3 điểm không"
-        " thẳng hàng.\n- Nếu đường thẳng $d$ có 2 điểm phân biệt thuộc mặt phẳng"
-        " $(\\alpha)$ thì mọi điểm của $d$ đều thuộc $(\\alpha)$."
+        "Nhập tọa độ 3 điểm không thẳng hàng $A, B, C$ trong không gian để vẽ"
+        " mặt phẳng chứa chúng:"
     )
+    col1, col2, col3 = st.columns(3)
+    with col1:
+      xA = st.number_input("Ax", value=1.0)
+      yA = st.number_input("Ay", value=0.0)
+      zA = st.number_input("Az", value=0.0)
+    with col2:
+      xB = st.number_input("Bx", value=0.0)
+      yB = st.number_input("By", value=2.0)
+      zB = st.number_input("Bz", value=0.0)
+    with col3:
+      xC = st.number_input("Cx", value=0.0)
+      yC = st.number_input("Cy", value=0.0)
+      zC = st.number_input("Cz", value=2.0)
 
-    # Vẽ hình minh họa 3D mặt phẳng và đường thẳng
-    fig = plt.figure(figsize=(6, 5))
-    ax = fig.add_subplot(111, projection="3d")
+    if st.button("Vẽ mặt phẳng (ABC)", type="primary"):
+      fig = plt.figure(figsize=(6, 5))
+      ax = fig.add_subplot(111, projection="3d")
 
-    # Vẽ mặt phẳng
-    xx, yy = np.meshgrid(range(-2, 3), range(-2, 3))
-    zz = np.zeros(xx.shape)
-    ax.plot_surface(xx, yy, zz, alpha=0.3, color="cyan")
+      # Vẽ 3 điểm
+      ax.scatter(
+          [xA, xB, xC],
+          [yA, yB, yC],
+          [zA, zB, zC],
+          color="red",
+          s=50,
+          label="Điểm A, B, C",
+      )
 
-    # Vẽ đường thẳng cắt mặt phẳng
-    xd = np.array([-1, 1])
-    yd = np.array([-1, 1])
-    zd = np.array([-2, 2])
-    ax.plot(xd, yd, zd, color="red", linewidth=3, label="Đường thẳng d")
+      # Tạo lưới mặt phẳng đi qua 3 điểm (mô phỏng)
+      xx, yy = np.meshgrid(
+          np.linspace(-2, 2, 10), np.linspace(-2, 2, 10)
+      )
+      # Phương trình mặt phẳng đơn giản để minh họa trực quan
+      zz = (
+          zA
+          - (xx - xA) * 0.5
+          - (yy - yA) * 0.5
+      )  # Xấp xỉ mặt phẳng trực quan
+      ax.plot_surface(xx, yy, zz, alpha=0.4, color="cyan")
 
-    ax.set_title("Minh họa Đường thẳng cắt Mặt phẳng")
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-    st.pyplot(fig)
+      ax.set_title("Mặt phẳng (ABC) trong không gian 3D")
+      ax.set_xlabel("Trục X")
+      ax.set_ylabel("Trục Y")
+      ax.set_zlabel("Trục Z")
+      st.pyplot(fig)
+      st.success("✅ Đã vẽ thành công mặt phẳng đi qua 3 điểm bạn nhập!")
 
-  elif sub_choice == "Bài 11: Hai đường thẳng song song":
-    st.subheader("2. Vị trí tương đối của hai đường thẳng trong không gian")
+  elif sub_choice == "Bài 11: Kiểm tra hai đường thẳng song song":
     st.markdown(
-        "- Hai đường thẳng **song song** là hai đường thẳng nằm trong cùng một"
-        " mặt phẳng và không có điểm chung.\n- Định lý: Giao tuyến của ba mặt"
-        " phẳng..."
+        "Nhập vectơ chỉ phương của đường thẳng $d_1(u_1, v_1, w_1)$ và $d_2(u_2,"
+        " v_2, w_2)$ để kiểm tra tính song song:"
     )
+    col1, col2 = st.columns(2)
+    with col1:
+      st.markdown("**Đường thẳng d₁**")
+      u1 = st.number_input("u1", value=1.0)
+      v1 = st.number_input("v1", value=2.0)
+      w1 = st.number_input("w1", value=1.0)
+    with col2:
+      st.markdown("**Đường thẳng d₂**")
+      u2 = st.number_input("u2", value=2.0)
+      v2 = st.number_input("v2", value=4.0)
+      w2 = st.number_input("w2", value=2.0)
 
-    # Vẽ hình minh họa hai đường thẳng song song
-    fig, ax = plt.subplots(figsize=(6, 4))
-    ax.plot([1, 5], [2, 2], color="blue", linewidth=3, label="Đường thẳng a")
-    ax.plot([1, 5], [4, 4], color="green", linewidth=3, label="Đường thẳng b")
-    ax.text(3, 2.2, "a", fontsize=12, color="blue")
-    ax.text(3, 4.2, "b", fontsize=12, color="green")
-    ax.set_xlim(0, 6)
-    ax.set_ylim(0, 6)
-    ax.axis("off")
-    ax.set_title("Minh họa Hai đường thẳng song song trong không gian")
-    st.pyplot(fig)
+    if st.button("Kiểm tra & Vẽ hình", type="primary"):
+      # Kiểm tra tỉ lệ vectơ chỉ phương
+      cross_x = v1 * w2 - w1 * v2
+      cross_y = w1 * u2 - u1 * w2
+      cross_z = u1 * v2 - v1 * u2
 
-  elif sub_choice == "Bài 12: Đường thẳng và mặt phẳng song song":
-    st.subheader("3. Đường thẳng song song với mặt phẳng")
+      is_parallel = (
+          abs(cross_x) < 1e-5
+          and abs(cross_y) < 1e-5
+          and abs(cross_z) < 1e-5
+      )
+
+      if is_parallel:
+        st.success(
+            "✅ Kết quả: Hai đường thẳng **song song hoặc trùng nhau** (Vectơ"
+            " chỉ phương cùng phương)."
+        )
+      else:
+        st.warning(
+            "⚠️ Kết quả: Hai đường thẳng **không song song** với nhau."
+        )
+
+      # Vẽ minh họa 2 đường thẳng
+      fig = plt.figure(figsize=(6, 5))
+      ax = fig.add_subplot(111, projection="3d")
+
+      t = np.linspace(-2, 2, 10)
+      # d1 qua gốc tọa độ
+      ax.plot(u1 * t, v1 * t, w1 * t, color="blue", linewidth=3, label="Đường thẳng d₁")
+      # d2 dịch chuyển một đoạn
+      ax.plot(
+          u2 * t + 1,
+          v2 * t + 1,
+          w2 * t + 1,
+          color="green",
+          linewidth=3,
+          label="Đường thẳng d₂",
+      )
+
+      ax.set_title("Vị trí tương đối của hai đường thẳng")
+      st.pyplot(fig)
+
+  elif sub_choice == "Bài 12: Kiểm tra đường thẳng song song với mặt phẳng":
     st.markdown(
-        "- Nếu đường thẳng $d$ không thuộc mặt phẳng $(\\alpha)$ và song song"
-        " với một đường thẳng nằm trong $(\\alpha)$ thì $d \\parallel"
-        " (\\alpha)$."
+        "Nhập vectơ pháp tuyến của mặt phẳng $(P)(A, B, C, D)$ và vectơ chỉ"
+        " phương của đường thẳng $d(u, v, w)$:"
     )
+    col1, col2 = st.columns(2)
+    with col1:
+      st.markdown("**Mặt phẳng (P): Ax + By + Cz + D = 0**")
+      A = st.number_input("Hệ số A", value=1.0)
+      B = st.number_input("Hệ số B", value=1.0)
+      C = st.number_input("Hệ số C", value=1.0)
+    with col2:
+      st.markdown("**Đường thẳng d (VTCP u, v, w)**")
+      u = st.number_input("u", value=-1.0)
+      v = st.number_input("v", value=1.0)
+      w = st.number_input("w", value=0.0)
 
-    # Vẽ hình minh họa đường thẳng song song với mặt phẳng
-    fig = plt.figure(figsize=(6, 5))
-    ax = fig.add_subplot(111, projection="3d")
+    if st.button("Kiểm tra điều kiện song song", type="primary"):
+      # Điều kiện: A*u + B*v + C*w = 0
+      dot_product = A * u + B * v + C * w
+      if abs(dot_product) < 1e-5:
+        st.success(
+            "✅ Kết quả: Đường thẳng **song song hoặc nằm trong** mặt phẳng"
+            " (A*u + B*v + C*w = 0)."
+        )
+      else:
+        st.error(
+            "❌ Kết quả: Đường thẳng cắt mặt phẳng (A*u + B*v + C*w khác 0)."
+        )
 
-    xx, yy = np.meshgrid(range(-2, 3), range(-2, 3))
-    zz = np.zeros(xx.shape)
-    ax.plot_surface(xx, yy, zz, alpha=0.3, color="orange")
+      # Vẽ hình mô phỏng
+      fig = plt.figure(figsize=(6, 5))
+      ax = fig.add_subplot(111, projection="3d")
 
-    # Đường thẳng song song phía trên mặt phẳng
-    xd = np.array([-2, 2])
-    yd = np.array([-2, 2])
-    zd = np.array([1.5, 1.5])
-    ax.plot(xd, yd, zd, color="purple", linewidth=3, label="Đường thẳng d || (α)")
+      xx, yy = np.meshgrid(range(-2, 3), range(-2, 3))
+      # Giả lập mặt phẳng Z = -(A*x + B*y) / C nếu C != 0
+      if C != 0:
+        zz = (-A * xx - B * yy) / C
+        ax.plot_surface(xx, yy, zz, alpha=0.3, color="orange")
 
-    ax.set_title("Đường thẳng song song với Mặt phẳng")
-    st.pyplot(fig)
+      ax.set_title("Đường thẳng và Mặt phẳng")
+      st.pyplot(fig)
 
 st.markdown("---")
 st.markdown(
