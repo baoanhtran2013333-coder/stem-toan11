@@ -195,53 +195,61 @@ elif menu == "4. Hình học không gian (Tự nhập dữ liệu & Vẽ hình 3
       st.pyplot(fig)
 
 elif menu == "5. Thống kê: Mẫu số liệu ghép nhóm & Xu thế trung tâm (Bài 8, 9)":
-  st.header("📊 Thống kê lớp 11: Mẫu số liệu ghép nhóm & Xu thế trung tâm")
+  st.header("📊 Mẫu số liệu ghép nhóm (MSL) & Các số đặc trưng")
   
-  tab1, tab2 = st.tabs(["Bài 8: Mẫu số liệu ghép nhóm (MSL)", "Bài 9: Xu thế trung tâm"])
+  st.markdown("### Bảng mẫu số liệu ghép nhóm")
+  st.markdown("Nhập các nhóm số liệu và tần số tương ứng để tạo bảng thống kê chuẩn giống SGK:")
 
-  with tab1:
-    st.subheader("Nhập mẫu số liệu ghép nhóm để vẽ biểu đồ tần số")
-    n_groups = st.number_input("Số lượng nhóm số liệu:", min_value=2, max_value=6, value=4, step=1)
+  num_cols = st.number_input("Số lượng cột (nhóm) của bảng:", min_value=2, max_value=8, value=5, step=1)
 
-    groups = []
-    frequencies = []
-    col_a, col_b = st.columns(2)
-    for i in range(int(n_groups)):
-      with col_a:
-        g_name = st.text_input(f"Nhóm {i+1} (VD: [10-20]):", value=f"[{i*10}-{(i+1)*10}]", key=f"g_{i}")
-      with col_b:
-        freq = st.number_input(f"Tần số nhóm {i+1}:", min_value=1, value=5 + i * 2, key=f"f_{i}")
-      groups.append(g_name)
-      frequencies.append(freq)
+  # Tạo danh sách nhập liệu dạng bảng linh hoạt
+  col_names = []
+  col_freqs = []
 
-    if st.button("Vẽ biểu đồ tần số MSL", type="primary"):
-      fig, ax = plt.subplots(figsize=(7, 4))
-      ax.bar(groups, frequencies, color="skyblue", edgecolor="black", width=0.6)
-      ax.set_xlabel("Nhóm số liệu", fontweight="bold")
-      ax.set_ylabel("Tần số", fontweight="bold")
-      ax.set_title("Biểu đồ tần số mẫu số liệu ghép nhóm", fontweight="bold")
-      st.pyplot(fig)
-      st.success("✅ Đã vẽ biểu đồ tần số thành công!")
+  cols = st.columns(int(num_cols))
+  default_intervals = ["[15; 20)", "[20; 25)", "[25; 30)", "[30; 35)", "[35; 40)", "[40; 45)", "[45; 50)", "[50; 55)"]
+  default_freqs = [6, 14, 25, 37, 21, 13, 9, 5]
 
-  with tab2:
-    st.subheader("Tính toán Số trung bình của mẫu số liệu ghép nhóm")
-    xi_input = st.text_input("Giá trị đại diện x_i (cách nhau bởi dấu phẩy):", value="15, 25, 35, 45")
-    ni_input = st.text_input("Tần số n_i tương ứng (cách nhau bởi dấu phẩy):", value="4, 10, 12, 4")
+  for i in range(int(num_cols)):
+    with cols[i]:
+      g = st.text_input(f"Nhóm {i+1}", value=default_intervals[i], key=f"group_{i}")
+      f = st.number_input(f"Tần số {i+1}", value=default_freqs[i], min_value=0, key=f"freq_{i}")
+      col_names.append(g)
+      col_freqs.append(f)
 
-    if st.button("Tính số trung bình MSL", type="primary"):
-      try:
-        xi = [float(x.strip()) for x in xi_input.split(",")]
-        ni = [float(n.strip()) for n in ni_input.split(",")]
-        if len(xi) != len(ni):
-          st.error("❌ Số lượng giá trị đại diện và tần số phải bằng nhau!")
+  if st.button("Hiển thị Bảng Mẫu Số Liệu & Tính toán", type="primary"):
+    # Hiển thị bảng dạng DataFrame giống hệt yêu cầu
+    table_data = {
+        "Thời gian / Nhóm": col_names,
+        "Tần số (Số lượng)": col_freqs
+    }
+    st.table(table_data)
+
+    # Tính toán cơ bản (Số trung bình)
+    # Lấy giá trị trung tâm của các nhóm để ước lượng số trung bình
+    try:
+      mid_points = []
+      for g in col_names:
+        # Lọc lấy các số trong khoảng [a; b)
+        import re
+        numbers = re.findall(r"[-+]?\d*\.\d+|\d+", g)
+        if len(numbers) >= 2:
+          a_val = float(numbers[0])
+          b_val = float(numbers[1])
+          mid_points.append((a_val + b_val) / 2)
         else:
-          total_n = sum(ni)
-          mean_val = sum(x * n for x, n in zip(xi, ni)) / total_n
-          st.success("🎯 Kết quả tính toán:")
-          st.metric(label="Tổng số phần tử (n)", value=f"{total_n}")
-          st.metric(label="Số trung bình cộng ($\\bar{x}$)", value=f"{mean_val:.2f}")
-      except Exception as e:
-        st.error("❌ Vui lòng nhập đúng định dạng số cách nhau bằng dấu phẩy!")
+          mid_points.append(0.0)
+
+      total_n = sum(col_freqs)
+      if total_n > 0:
+        mean_val = sum(m * f for m, f in zip(mid_points, col_freqs)) / total_n
+        st.success("🎯 Kết quả phân tích thống kê:")
+        st.metric(label="Tổng số phần tử (n)", value=f"{total_n}")
+        st.metric(label="Số trung bình cộng ước lượng ($\\bar{x}$)", value=f"{mean_val:.2f}")
+      else:
+        st.warning("⚠️ Tổng tần số phải lớn hơn 0.")
+    except Exception as e:
+      st.error("❌ Vui lòng định dạng tên nhóm chứa khoảng số hợp lệ (VD: [15; 20)).")
 
 st.markdown("---")
 st.markdown("<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Thực hiện bằng Python & Streamlit</p>", unsafe_allow_html=True)
