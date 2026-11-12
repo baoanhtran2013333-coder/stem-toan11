@@ -1,6 +1,8 @@
 import math
+import re
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import streamlit as st
 
 st.set_page_config(page_title="STEM Toán 11", page_icon="📐", layout="centered")
@@ -16,7 +18,7 @@ menu = st.sidebar.selectbox(
         "1. Giải phương trình sin(x) = a",
         "2. Tính Cấp số cộng",
         "3. Tính Xác suất P(A)",
-        "4. Bài 8: Mẫu số liệu ghép nhóm (MSL)",
+        "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)",
         "5. Bài 9: Các số đặc trưng đo xu thế trung tâm",
         "6. Bài 10: Đường thẳng và mặt phẳng trong không gian",
         "7. Bài 11: Hai đường thẳng song song",
@@ -35,32 +37,23 @@ if menu == "1. Giải phương trình sin(x) = a":
 
       eps = 1e-3
       if abs(a - 0) < eps:
-        str_arcsin = "0"
-        str_pi_minus = "\\pi"
+        str_arcsin, str_pi_minus = "0", "\\pi"
       elif abs(a - 0.5) < eps:
-        str_arcsin = "\\frac{\\pi}{6}"
-        str_pi_minus = "\\frac{5\\pi}{6}"
+        str_arcsin, str_pi_minus = "\\frac{\\pi}{6}", "\\frac{5\\pi}{6}"
       elif abs(a - math.sqrt(2) / 2) < eps:
-        str_arcsin = "\\frac{\\pi}{4}"
-        str_pi_minus = "\\frac{3\\pi}{4}"
+        str_arcsin, str_pi_minus = "\\frac{\\pi}{4}", "\\frac{3\\pi}{4}"
       elif abs(a - math.sqrt(3) / 2) < eps:
-        str_arcsin = "\\frac{\\pi}{3}"
-        str_pi_minus = "\\frac{2\\pi}{3}"
+        str_arcsin, str_pi_minus = "\\frac{\\pi}{3}", "\\frac{2\\pi}{3}"
       elif abs(a - 1) < eps:
-        str_arcsin = "\\frac{\\pi}{2}"
-        str_pi_minus = "\\frac{\\pi}{2}"
+        str_arcsin, str_pi_minus = "\\frac{\\pi}{2}", "\\frac{\\pi}{2}"
       elif abs(a - (-0.5)) < eps:
-        str_arcsin = "-\\frac{\\pi}{6}"
-        str_pi_minus = "\\frac{7\\pi}{6}"
+        str_arcsin, str_pi_minus = "-\\frac{\\pi}{6}", "\\frac{7\\pi}{6}"
       elif abs(a - (-math.sqrt(2) / 2)) < eps:
-        str_arcsin = "-\\frac{\\pi}{4}"
-        str_pi_minus = "\\frac{5\\pi}{4}"
+        str_arcsin, str_pi_minus = "-\\frac{\\pi}{4}", "\\frac{5\\pi}{4}"
       elif abs(a - (-math.sqrt(3) / 2)) < eps:
-        str_arcsin = "-\\frac{\\pi}{3}"
-        str_pi_minus = "\\frac{4\\pi}{3}"
+        str_arcsin, str_pi_minus = "-\\frac{\\pi}{3}", "\\frac{4\\pi}{3}"
       elif abs(a - (-1)) < eps:
-        str_arcsin = "-\\frac{\\pi}{2}"
-        str_pi_minus = "\\frac{3\\pi}{2}"
+        str_arcsin, str_pi_minus = "-\\frac{\\pi}{2}", "\\frac{3\\pi}{2}"
       else:
         str_arcsin = f"{alpha_rad:.4f}"
         str_pi_minus = f"\\pi - {alpha_rad:.4f}"
@@ -107,62 +100,132 @@ elif menu == "3. Tính Xác suất P(A)":
     else:
       st.error("❌ $n(A)$ không thể lớn hơn không gian mẫu!")
 
-elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (MSL)":
+elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)":
   st.header("📊 Bài 8: Mẫu số liệu ghép nhóm")
-  st.markdown("Nhập bảng mẫu số liệu ghép nhóm tùy chỉnh của riêng bạn:")
+  st.markdown("Dán dãy số liệu thô bất kỳ vào ô bên dưới, hệ thống sẽ tự động chia nhóm có độ dài bằng nhau và xuất ra bảng tần số chuẩn SGK:")
 
-  num_cols = st.number_input("Số lượng nhóm số liệu:", min_value=2, max_value=8, value=5, step=1)
-  
-  col_names = []
-  col_freqs = []
-  cols = st.columns(int(num_cols))
-  default_intervals = ["[15; 20)", "[20; 25)", "[25; 30)", "[30; 35)", "[35; 40)", "[40; 45)", "[45; 50)", "[50; 55)"]
-  default_freqs = [6, 14, 25, 37, 21, 13, 9, 5]
+  raw_data_input = st.text_area(
+      "Nhập mẫu số liệu thô (cách nhau bằng dấu cách, dấu phẩy hoặc xuống dòng):",
+      value="653 632 609 572 565 535 516 514 508 505 504 504 503 499 496 492",
+      height=100,
+  )
 
-  for i in range(int(num_cols)):
-    with cols[i]:
-      g = st.text_input(f"Nhóm {i+1}", value=default_intervals[i], key=f"b8_g_{i}")
-      f = st.number_input(f"Tần số {i+1}", value=default_freqs[i], min_value=0, key=f"b8_f_{i}")
-      col_names.append(g)
-      col_freqs.append(f)
+  num_groups = st.number_input(
+      "Số lượng nhóm muốn chia:", min_value=2, max_value=15, value=7, step=1
+  )
 
-  if st.button("Hiển thị Bảng Mẫu Số Liệu", type="primary"):
-    table_data = {
-        "Thời gian / Nhóm": col_names,
-        "Tần số (Số lượng)": col_freqs
-    }
-    st.table(table_data)
-    st.success("✅ Đã tạo thành công bảng mẫu số liệu ghép nhóm Bài 8!")
+  if st.button("Xử lý & Xuất Bảng Ghép Nhóm", type="primary"):
+    try:
+      numbers = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|\d+", raw_data_input)]
+      if len(numbers) == 0:
+        st.error("❌ Không tìm thấy dữ liệu số hợp lệ! Vui lòng kiểm tra lại.")
+      else:
+        min_val = min(numbers)
+        max_val = max(numbers)
+        range_val = max_val - min_val
+        h = range_val / num_groups if range_val > 0 else 1.0
+
+        st.info(
+            f"💡 **Phân tích sơ bộ:** Tổng số phần tử $N = {len(numbers)}$ | "
+            f"$\\min = {min_val}$ | $\\max = {max_val}$ | Độ dài mỗi nhóm $h \\approx {h:.2f}$"
+        )
+
+        bins = [min_val + i * h for i in range(int(num_groups) + 1)]
+        group_labels = []
+        frequencies = []
+
+        for i in range(len(bins) - 1):
+          left, right = bins[i], bins[i + 1]
+          if i == len(bins) - 2:
+            count = sum(1 for x in numbers if left <= x <= right)
+            label = f"[{left:.1f}; {right:.1f}]"
+          else:
+            count = sum(1 for x in numbers if left <= x < right)
+            label = f"[{left:.1f}; {right:.1f})"
+          group_labels.append(label)
+          frequencies.append(count)
+
+        table_df = pd.DataFrame(
+            [frequencies], columns=group_labels, index=["Tần số (Số lượng)"]
+        )
+        st.success("✅ Bảng mẫu số liệu ghép nhóm hoàn chỉnh:")
+        st.dataframe(table_df)
+    except Exception as e:
+      st.error(f"❌ Lỗi xử lý dữ liệu: {e}")
 
 elif menu == "5. Bài 9: Các số đặc trưng đo xu thế trung tâm":
   st.header("📈 Bài 9: Các số đặc trưng đo xu thế trung tâm")
-  st.markdown("Nhập giá trị đại diện và tần số tương ứng để tính **Số trung bình cộng**:")
+  st.markdown("Nhập các nhóm khoảng $[a_i; b_i)$ và tần số $n_i$ để tính **Số trung bình cộng, Trung vị và Mốt**:")
 
-  xi_input = st.text_input("Giá trị đại diện x_i (cách nhau bởi dấu phẩy):", value="17.5, 22.5, 27.5, 32.5, 37.5")
-  ni_input = st.text_input("Tần số n_i tương ứng (cách nhau bởi dấu phẩy):", value="6, 14, 25, 37, 21")
+  col1, col2 = st.columns(2)
+  with col1:
+    intervals_input = st.text_input(
+        "Các nhóm khoảng (cách nhau bởi dấu phẩy):",
+        value="[15; 20), [20; 25), [25; 30), [30; 35), [35; 40)",
+    )
+  with col2:
+    ni_input = st.text_input(
+        "Tần số n_i tương ứng (cách nhau bởi dấu phẩy):",
+        value="6, 14, 25, 37, 21",
+    )
 
-  if st.button("Tính số trung bình", type="primary"):
+  if st.button("Tính các số đặc trưng", type="primary"):
     try:
-      xi = [float(x.strip()) for x in xi_input.split(",")]
+      raw_groups = [g.strip() for g in intervals_input.split(",")]
       ni = [float(n.strip()) for n in ni_input.split(",")]
-      if len(xi) != len(ni):
-        st.error("❌ Số lượng giá trị đại diện và tần số phải bằng nhau!")
+
+      if len(raw_groups) != len(ni):
+        st.error("❌ Số lượng nhóm và số lượng tần số phải bằng nhau!")
       else:
+        xi = []
+        bounds = []
+        for g in raw_groups:
+          nums = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|\d+", g)]
+          if len(nums) >= 2:
+            bounds.append((nums[0], nums[1]))
+            xi.append((nums[0] + nums[1]) / 2)
+          else:
+            raise ValueError("Định dạng nhóm không hợp lệ")
+
         total_n = sum(ni)
         mean_val = sum(x * n for x, n in zip(xi, ni)) / total_n
-        st.success("🎯 Kết quả tính toán số đặc trưng:")
-        st.metric(label="Tổng số phần tử (n)", value=f"{total_n}")
-        st.metric(label="Số trung bình cộng ước lượng ($\\bar{x}$)", value=f"{mean_val:.2f}")
-    except Exception as e:
-      st.error("❌ Vui lòng nhập đúng định dạng số cách nhau bằng dấu phẩy!")
+
+        # Tính Trung vị (Me)
+        half_n = total_n / 2
+        cum_freq = 0
+        me_val = 0
+        for i, n_val in enumerate(ni):
+          if cum_freq + n_val >= half_n:
+            a_p, b_p = bounds[i]
+            me_val = a_p + ((half_n - cum_freq) / n_val) * (b_p - a_p)
+            break
+          cum_freq += n_val
+
+        # Tính Mốt (Mo)
+        max_idx = int(np.argmax(ni))
+        a_m, b_m = bounds[max_idx]
+        n_m = ni[max_idx]
+        n_prev = ni[max_idx - 1] if max_idx > 0 else 0
+        n_next = ni[max_idx + 1] if max_idx < len(ni) - 1 else 0
+        denom = (n_m - n_prev) + (n_m - n_next)
+        mo_val = a_m + ((n_m - n_prev) / denom) * (b_m - a_m) if denom != 0 else a_m
+
+        st.success("🎯 Kết quả các số đặc trưng của mẫu số liệu ghép nhóm:")
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Cỡ mẫu (n)", f"{int(total_n)}")
+        c2.metric("Số trung bình (x̄)", f"{mean_val:.2f}")
+        c3.metric("Trung vị (Me)", f"{me_val:.2f}")
+        c4.metric("Mốt (Mo)", f"{mo_val:.2f}")
+    except Exception:
+      st.error("❌ Vui lòng nhập đúng định dạng nhóm (VD: [15; 20)) và tần số tương ứng!")
 
 elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian":
   st.header("📐 Bài 10: Đường thẳng và mặt phẳng trong không gian")
-  st.markdown("Nhập tọa độ 3 điểm $A, B, C$ không thẳng hàng để vẽ mặt phẳng $(\\alpha)$ chứa chúng:")
+  st.markdown("Nhập tọa độ 3 điểm $A, B, C$ không thẳng hàng để xác định và vẽ mặt phẳng $(\\alpha)$:")
 
   col1, col2, col3 = st.columns(3)
   with col1:
-    xA = st.number_input("Ax", value=1.0)
+    xA = st.number_input("Ax", value=2.0)
     yA = st.number_input("Ay", value=0.0)
     zA = st.number_input("Az", value=0.0)
   with col2:
@@ -175,77 +238,127 @@ elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian"
     zC = st.number_input("Cz", value=2.0)
 
   if st.button("Vẽ mô hình 3D Bài 10", type="primary"):
-    fig = plt.figure(figsize=(7, 6))
-    ax = fig.add_subplot(111, projection="3d")
-    ax.scatter([xA, xB, xC], [yA, yB, yC], [zA, zB, zC], color="red", s=70, depthshade=False)
-    ax.text(xA, yA, zA, " A", fontsize=11, fontweight="bold", color="red")
-    ax.text(xB, yB, zB, " B", fontsize=11, fontweight="bold", color="red")
-    ax.text(xC, yC, zC, " C", fontsize=11, fontweight="bold", color="red")
-    ax.plot([xA, xB], [yA, yB], [zA, zB], "b--", linewidth=2)
-    ax.plot([xB, xC], [yB, yC], [zB, zC], "b--", linewidth=2)
-    ax.plot([xC, xA], [yC, yA], [zC, zA], "b--", linewidth=2)
-    
-    xx, yy = np.meshgrid(np.linspace(-2, 2, 5), np.linspace(-2, 2, 5))
-    zz = zA + 0.5 * (xx - xA) + 0.5 * (yy - yA)
-    ax.plot_surface(xx, yy, zz, alpha=0.35, color="cyan")
-    ax.set_title("Bài 10: Mặt phẳng (ABC) trong không gian 3D", fontsize=12, fontweight="bold")
-    st.pyplot(fig)
-    st.success("✅ Đã vẽ hình không gian Bài 10 thành công!")
+    pA, pB, pC = np.array([xA, yA, zA]), np.array([xB, yB, zB]), np.array([xC, yC, zC])
+    normal = np.cross(pB - pA, pC - pA)
+
+    if np.linalg.norm(normal) < 1e-6:
+      st.error("❌ 3 điểm A, B, C thẳng hàng nên không xác định được một mặt phẳng duy nhất!")
+    else:
+      fig = plt.figure(figsize=(7, 6))
+      ax = fig.add_subplot(111, projection="3d")
+      ax.scatter([xA, xB, xC], [yA, yB, yC], [zA, zB, zC], color="red", s=80, depthshade=False)
+      ax.text(xA, yA, zA, "  A", fontsize=12, fontweight="bold", color="red")
+      ax.text(xB, yB, zB, "  B", fontsize=12, fontweight="bold", color="red")
+      ax.text(xC, yC, zC, "  C", fontsize=12, fontweight="bold", color="red")
+
+      ax.plot([xA, xB], [yA, yB], [zA, zB], "b--", linewidth=2)
+      ax.plot([xB, xC], [yB, yC], [zB, zC], "b--", linewidth=2)
+      ax.plot([xC, xA], [yC, yA], [zC, zA], "b--", linewidth=2)
+
+      # Vẽ mặt phẳng chính xác qua A, B, C
+      a_n, b_n, c_n = normal
+      d_n = -np.dot(normal, pA)
+      lim_min = min(xA, xB, xC, yA, yB, yC) - 1
+      lim_max = max(xA, xB, xC, yA, yB, yC) + 1
+      xx, yy = np.meshgrid(np.linspace(lim_min, lim_max, 10), np.linspace(lim_min, lim_max, 10))
+      if abs(c_n) > 1e-5:
+        zz = (-a_n * xx - b_n * yy - d_n) / c_n
+        ax.plot_surface(xx, yy, zz, alpha=0.35, color="cyan")
+
+      ax.set_title("Bài 10: Mặt phẳng (ABC) trong không gian 3D", fontsize=12, fontweight="bold")
+      ax.set_xlabel("Trục X")
+      ax.set_ylabel("Trục Y")
+      ax.set_zlabel("Trục Z")
+      st.pyplot(fig)
+      st.success(f"✅ Phương trình mặt phẳng (ABC): ${a_n:.1f}x + ({b_n:.1f})y + ({c_n:.1f})z + ({d_n:.1f}) = 0$")
 
 elif menu == "7. Bài 11: Hai đường thẳng song song":
   st.header("📐 Bài 11: Hai đường thẳng song song")
-  st.markdown("Nhập vectơ chỉ phương của hai đường thẳng $d_1$ và $d_2$ để kiểm tra và vẽ hình:")
+  st.markdown("Nhập tọa độ điểm đi qua và vectơ chỉ phương của hai đường thẳng $d_1$ và $d_2$:")
 
   col1, col2 = st.columns(2)
   with col1:
-    st.markdown("**Đường thẳng d₁**")
-    u1 = st.number_input("u1", value=1.0)
-    v1 = st.number_input("v1", value=2.0)
-    w1 = st.number_input("w1", value=1.0)
+    st.markdown("**Đường thẳng $d_1$ (qua $M_1$, VTCP $\\vec{u}_1$)**")
+    x1, y1, z1 = st.number_input("x₁", value=0.0), st.number_input("y₁", value=0.0), st.number_input("z₁", value=0.0)
+    u1, v1, w1 = st.number_input("u₁", value=1.0), st.number_input("v₁", value=2.0), st.number_input("w₁", value=1.0)
   with col2:
-    st.markdown("**Đường thẳng d₂**")
-    u2 = st.number_input("u2", value=2.0)
-    v2 = st.number_input("v2", value=4.0)
-    w2 = st.number_input("w2", value=2.0)
+    st.markdown("**Đường thẳng $d_2$ (qua $M_2$, VTCP $\\vec{u}_2$)**")
+    x2, y2, z2 = st.number_input("x₂", value=1.0), st.number_input("y₂", value=0.0), st.number_input("z₂", value=1.0)
+    u2, v2, w2 = st.number_input("u₂", value=2.0), st.number_input("v₂", value=4.0), st.number_input("w₂", value=2.0)
 
-  if st.button("Vẽ mô hình 3D Bài 11", type="primary"):
+  if st.button("Kiểm tra & Vẽ mô hình 3D Bài 11", type="primary"):
+    vec1, vec2 = np.array([u1, v1, w1]), np.array([u2, v2, w2])
+    m1_m2 = np.array([x2 - x1, y2 - y1, z2 - z1])
+
+    is_collinear = np.linalg.norm(np.cross(vec1, vec2)) < 1e-5
+    is_same_line = is_collinear and (np.linalg.norm(np.cross(m1_m2, vec1)) < 1e-5)
+
+    if is_same_line:
+      st.info("ℹ️ Kết luận: Hai đường thẳng **trùng nhau** ($d_1 \\equiv d_2$).")
+    elif is_collinear:
+      st.success("✅ Kết luận: Hai đường thẳng **song song** ($d_1 \\parallel d_2$).")
+    else:
+      st.warning("⚠️ Kết luận: Hai đường thẳng **cắt nhau hoặc chéo nhau** (không song song).")
+
     fig = plt.figure(figsize=(7, 6))
     ax = fig.add_subplot(111, projection="3d")
     t = np.linspace(-2, 2, 10)
-    ax.plot(u1 * t, v1 * t, w1 * t, color="blue", linewidth=3, label="d₁")
-    ax.plot(u2 * t + 1, v2 * t + 1, w2 * t + 1, color="green", linewidth=3, label="d₂")
-    ax.set_title("Bài 11: Hai đường thẳng song song", fontsize=12, fontweight="bold")
+    ax.plot(x1 + u1 * t, y1 + v1 * t, z1 + w1 * t, color="blue", linewidth=3, label="Đường thẳng d₁")
+    ax.plot(x2 + u2 * t, y2 + v2 * t, z2 + w2 * t, color="green", linewidth=3, label="Đường thẳng d₂")
+    ax.legend()
+    ax.set_title("Bài 11: Vị trí tương đối hai đường thẳng", fontsize=12, fontweight="bold")
+    ax.set_xlabel("Trục X")
+    ax.set_ylabel("Trục Y")
+    ax.set_zlabel("Trục Z")
     st.pyplot(fig)
-    st.success("✅ Đã vẽ mô hình Bài 11 thành công!")
 
 elif menu == "8. Bài 12: Đường thẳng và mặt phẳng song song":
   st.header("📐 Bài 12: Đường thẳng và mặt phẳng song song")
-  st.markdown("Nhập phương trình mặt phẳng $(P)$ và vectơ chỉ phương đường thẳng $d$:")
+  st.markdown("Nhập phương trình mặt phẳng $(P): Ax + By + Cz + D = 0$ và đường thẳng $d$ đi qua $M_0(x_0, y_0, z_0)$, VTCP $\\vec{u}(u, v, w)$:")
 
   col1, col2 = st.columns(2)
   with col1:
-    st.markdown("**Mặt phẳng (P): Ax + By + Cz + D = 0**")
+    st.markdown("**Mặt phẳng $(P)$**")
     A = st.number_input("Hệ số A", value=1.0)
     B = st.number_input("Hệ số B", value=1.0)
     C = st.number_input("Hệ số C", value=1.0)
+    D = st.number_input("Hệ số D", value=0.0)
   with col2:
-    st.markdown("**Đường thẳng d (VTCP)**")
-    u = st.number_input("u", value=-1.0)
-    v = st.number_input("v", value=1.0)
-    w = st.number_input("w", value=0.0)
+    st.markdown("**Đường thẳng $d$**")
+    x0, y0, z0 = st.number_input("x₀", value=0.0), st.number_input("y₀", value=0.0), st.number_input("z₀", value=2.0)
+    u, v, w = st.number_input("u", value=-1.0), st.number_input("v", value=1.0), st.number_input("w", value=0.0)
 
-  if st.button("Vẽ mô hình 3D Bài 12", type="primary"):
+  if st.button("Kiểm tra & Vẽ mô hình 3D Bài 12", type="primary"):
+    dot_prod = A * u + B * v + C * w
+    point_in_plane = abs(A * x0 + B * y0 + C * z0 + D) < 1e-5
+
+    if abs(dot_prod) < 1e-5:
+      if point_in_plane:
+        st.info("ℹ️ Kết luận: Đường thẳng $d$ **nằm trong** mặt phẳng $(P)$ ($d \\subset (P)$).")
+      else:
+        st.success("✅ Kết luận: Đường thẳng $d$ **song song** với mặt phẳng $(P)$ ($d \\parallel (P)$).")
+    else:
+      st.error("❌ Kết luận: Đường thẳng $d$ **cắt** mặt phẳng $(P)$.")
+
     fig = plt.figure(figsize=(7, 6))
     ax = fig.add_subplot(111, projection="3d")
-    xx, yy = np.meshgrid(np.linspace(-2, 2, 5), np.linspace(-2, 2, 5))
-    if C != 0:
-      zz = (-A * xx - B * yy) / C
-      ax.plot_surface(xx, yy, zz, alpha=0.3, color="orange")
-    xd = np.linspace(-2, 2, 10)
-    ax.plot(xd, np.ones_like(xd), np.ones_like(xd) * 2, color="purple", linewidth=3)
-    ax.set_title("Bài 12: Đường thẳng song song với Mặt phẳng", fontsize=12, fontweight="bold")
+    xx, yy = np.meshgrid(np.linspace(-3, 3, 10), np.linspace(-3, 3, 10))
+    if abs(C) > 1e-5:
+      zz = (-A * xx - B * yy - D) / C
+      ax.plot_surface(xx, yy, zz, alpha=0.35, color="orange")
+
+    t = np.linspace(-2, 2, 10)
+    ax.plot(x0 + u * t, y0 + v * t, z0 + w * t, color="purple", linewidth=3, label="Đường thẳng d")
+    ax.scatter([x0], [y0], [z0], color="red", s=60, label="Điểm M₀")
+    ax.legend()
+    ax.set_title("Bài 12: Đường thẳng và Mặt phẳng trong 3D", fontsize=12, fontweight="bold")
+    ax.set_xlabel("Trục X")
+    ax.set_ylabel("Trục Y")
+    ax.set_zlabel("Trục Z")
     st.pyplot(fig)
-    st.success("✅ Đã vẽ mô hình Bài 12 thành công!")
 
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Thực hiện bằng Python & Streamlit</p>", unsafe_allow_html=True)
+st.markdown(
+    "<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Thực hiện bằng Python & Streamlit</p>",
+    unsafe_allow_html=True,
+)
