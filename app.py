@@ -23,6 +23,7 @@ menu = st.sidebar.selectbox(
         "6. Bài 10: Đường thẳng và mặt phẳng trong không gian",
         "7. Bài 11: Hai đường thẳng song song",
         "8. Bài 12: Đường thẳng và mặt phẳng song song",
+        "9. Giới hạn của dãy số",
     ],
 )
 
@@ -190,7 +191,6 @@ elif menu == "5. Bài 9: Các số đặc trưng đo xu thế trung tâm":
         total_n = sum(ni)
         mean_val = sum(x * n for x, n in zip(xi, ni)) / total_n
 
-        # Tính Trung vị (Me)
         half_n = total_n / 2
         cum_freq = 0
         me_val = 0
@@ -201,7 +201,6 @@ elif menu == "5. Bài 9: Các số đặc trưng đo xu thế trung tâm":
             break
           cum_freq += n_val
 
-        # Tính Mốt (Mo)
         max_idx = int(np.argmax(ni))
         a_m, b_m = bounds[max_idx]
         n_m = ni[max_idx]
@@ -255,7 +254,6 @@ elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian"
       ax.plot([xB, xC], [yB, yC], [zB, zC], "b--", linewidth=2)
       ax.plot([xC, xA], [yC, yA], [zC, zA], "b--", linewidth=2)
 
-      # Vẽ mặt phẳng chính xác qua A, B, C
       a_n, b_n, c_n = normal
       d_n = -np.dot(normal, pA)
       lim_min = min(xA, xB, xC, yA, yB, yC) - 1
@@ -356,6 +354,89 @@ elif menu == "8. Bài 12: Đường thẳng và mặt phẳng song song":
     ax.set_ylabel("Trục Y")
     ax.set_zlabel("Trục Z")
     st.pyplot(fig)
+
+elif menu == "9. Giới hạn của dãy số":
+  st.header("lim Giới hạn của dãy số")
+  st.markdown(
+      "Công cụ hỗ trợ tính toán và hướng dẫn giải các dạng giới hạn dãy số"
+      " thường gặp ($lim$). Chọn dạng toán bạn muốn khảo sát:"
+  )
+
+  sub_limit = st.selectbox(
+      "Chọn dạng toán giới hạn:",
+      [
+          "Dạng 1: Phân thức hữu tỉ (Đa thức trên đa thức)",
+          "Dạng 2: Biểu thức chứa căn thức",
+      ],
+  )
+
+  if sub_limit == "Dạng 1: Phân thức hữu tỉ (Đa thức trên đa thức)":
+    st.markdown(
+        "Xét giới hạn dạng: $L = \\lim \\frac{a_k n^k + ... + a_0}{b_m n^m +"
+        " ... + b_0}$"
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+      numer_input = st.text_input(
+          "Hệ số tử (từ bậc cao đến thấp, cách nhau bởi phẩy):", value="2, 3, 1"
+      )
+    with col2:
+      denom_input = st.text_input(
+          "Hệ số mẫu (từ bậc cao đến thấp, cách nhau bởi phẩy):", value="1, 4"
+      )
+
+    if st.button("Tính giới hạn phân thức", type="primary"):
+      try:
+        numer_coefs = [float(x.strip()) for x in numer_input.split(",")]
+        denom_coefs = [float(x.strip()) for x in denom_input.split(",")]
+
+        deg_numer = len(numer_coefs) - 1
+        deg_denom = len(denom_coefs) - 1
+
+        st.info(
+            f"💡 **Bậc cao nhất của tử:** $k = {deg_numer}$ | **Bậc cao nhất của mẫu:**"
+            f" $m = {deg_denom}$"
+        )
+
+        lead_numer = numer_coefs[0]
+        lead_denom = denom_coefs[0]
+
+        if deg_numer < deg_denom:
+          st.success("🎯 Kết quả: **L = 0** (Do bậc tử nhỏ hơn bậc mẫu)")
+        elif deg_numer == deg_denom:
+          ans = lead_numer / lead_denom
+          st.success(
+              f"🎯 Kết quả: **L = {lead_numer} / {lead_denom} = {ans:.4f}** (Do"
+              " bậc tử bằng bậc mẫu)"
+          )
+        else:
+          sign = (
+              "+\\infty"
+              if (lead_numer * lead_denom > 0)
+              else "-\\infty"
+          )
+          st.success(
+              f"🎯 Kết quả: **L = {sign}** (Do bậc tử lớn hơn bậc mẫu)"
+          )
+      except Exception as e:
+        st.error(f"❌ Lỗi định dạng đầu vào: {e}")
+
+  elif sub_limit == "Dạng 2: Biểu thức chứa căn thức":
+    st.markdown("Khảo sát giới hạn dạng cơ bản chứa căn: $\\lim (\\sqrt{n^2 + an} - n)$")
+    a_param = st.number_input("Nhập hệ số a:", value=2.0, step=1.0)
+
+    if st.button("Tính giới hạn căn thức", type="primary"):
+      result = a_param / 2.0
+      st.success("🎯 Kết quả phân tích và tính toán:")
+      st.latex(
+          f"\\lim (\\sqrt{{n^2 + {a_param}n}} - n) = \\frac{{{a_param}}}{{2}}"
+          f" = {result}"
+      )
+      st.info(
+          "💡 **Phương pháp giải:** Sử dụng lượng liên hợp nhân chia với"
+          " $(\\sqrt{n^2 + an} + n)$ để khử dạng vô định."
+      )
 
 st.markdown("---")
 st.markdown(
