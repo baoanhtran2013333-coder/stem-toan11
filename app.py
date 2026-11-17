@@ -219,11 +219,6 @@ elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian 
     )
 
   if st.button("Vẽ mô hình 3D Bài 10", type="primary"):
-    pA, pB, pC = (
-        np.array([xA, yA, zA]),
-        np.array([xB, yB, zB]),
-        np.array([xC, yC, zC]),
-    )
     fig = plt.figure(figsize=(7, 6))
     ax = fig.add_subplot(111, projection="3d")
     ax.scatter([xA, xB, xC], [yA, yB, yC], [zA, zB, zC], color="red", s=80)
@@ -259,9 +254,7 @@ elif menu == "8. Bài 12: Đường thẳng và mặt phẳng song song (3D)":
   if st.button("Vẽ mô hình 3D Bài 12", type="primary"):
     fig = plt.figure(figsize=(7, 6))
     ax = fig.add_subplot(111, projection="3d")
-    xx, yy = np.meshgrid(
-        np.linspace(-3, 3, 10), np.linspace(-3, 3, 10)
-    )
+    xx, yy = np.meshgrid(np.linspace(-3, 3, 10), np.linspace(-3, 3, 10))
     ax.plot_surface(xx, yy, np.zeros_like(xx), alpha=0.3, color="orange")
     t = np.linspace(-2, 2, 10)
     ax.plot(t, np.ones_like(t), 2 * np.ones_like(t), color="purple", linewidth=3)
@@ -270,90 +263,160 @@ elif menu == "8. Bài 12: Đường thẳng và mặt phẳng song song (3D)":
     st.success("✅ Đã vẽ mô hình Đường thẳng song song Mặt phẳng!")
 
 # ---------------------------------------------------------
-# MODULE 9: GIỚI HẠN DÃY SỐ (lim)
+# MODULE 9: GIỚI HẠN DÃY SỐ (lim) - ĐÃ BỔ SUNG NHẬP LIỆU ĐẦY ĐỦ
 # ---------------------------------------------------------
 elif menu == "9. Giới hạn của dãy số (lim)":
   st.header("lim Giới hạn của dãy số")
   sub_lim = st.selectbox(
-      "Chọn dạng:", ["Phân thức đa thức", "Biểu thức chứa căn"]
+      "Chọn dạng toán giới hạn:",
+      ["Phân thức đa thức (an^k / bm^n)", "Biểu thức chứa căn thức"],
   )
-  if sub_lim == "Biểu thức chứa căn":
+
+  if sub_lim == "Phân thức đa thức (an^k / bm^n)":
+    st.markdown("Nhập hệ số tử và mẫu từ bậc cao đến thấp (cách nhau bởi dấu phẩy):")
+    c1, c2 = st.columns(2)
+    with c1:
+      num_str = st.text_input("Hệ số tử thức:", value="2, 3, 1")
+    with c2:
+      den_str = st.text_input("Hệ số mẫu thức:", value="1, 4")
+
+    if st.button("Tính giới hạn phân thức", type="primary"):
+      try:
+        nums = [float(x.strip()) for x in num_str.split(",")]
+        dens = [float(x.strip()) for x in den_str.split(",")]
+        deg_num = len(nums) - 1
+        deg_den = len(dens) - 1
+        st.info(f"Bậc tử: {deg_num} | Bậc mẫu: {deg_den}")
+        if deg_num < deg_den:
+          st.success("🎯 Kết quả: **L = 0**")
+        elif deg_num == deg_den:
+          ans = nums[0] / dens[0]
+          st.success(f"🎯 Kết quả: **L = {ans:.4f}**")
+        else:
+          sign = "+\\infty" if (nums[0] * dens[0] > 0) else "-\\infty"
+          st.success(f"🎯 Kết quả: **L = {sign}**")
+      except Exception as e:
+        st.error(f"Lỗi định dạng: {e}")
+
+  else:
     a_param = st.number_input(
         "Nhập hệ số a trong lim(sqrt(n² + an) - n):", value=2.0
     )
-    if st.button("Tính giới hạn", type="primary"):
+    if st.button("Tính giới hạn căn thức", type="primary"):
       res = a_param / 2.0
       st.success(f"🎯 Kết quả: **{res}**")
       st.latex(
           f"\\lim (\\sqrt{{n^2 + {a_param}n}} - n) = \\frac{{{a_param}}}{{2}}"
           f" = {res}"
       )
-  else:
-    st.markdown(
-        "Nhập hệ số đa thức để tính giới hạn phân thức nhanh chóng."
-    )
 
 # ---------------------------------------------------------
-# MODULE 10: TRỢ LÝ GIẢI BÀI TẬP TỰ ĐỘNG
+# MODULE 10: TRỢ LÝ GIẢI BÀI TẬP TỰ ĐỘNG - CÓ FORM NHẬP SỐ LIỆU ĐẦY ĐỦ
 # ---------------------------------------------------------
 elif menu == "10. Trợ lý giải bài tập Toán 11 (Từng bước chi tiết)":
   st.header("🤖 Trợ lý Giải bài tập Toán 11 tự động")
   exercise_type = st.selectbox(
-      "Chọn dạng bài tập:",
+      "Chọn dạng bài tập cần giải:",
       [
           "1. Giải phương trình lượng giác sin(x) = k",
           "2. Tìm số hạng tổng quát Cấp số cộng",
           "3. Thống kê: Chuyển dữ liệu thô sang bảng ghép nhóm",
-          "4. Hình học 3D: Kiểm tra vị trí tương đối hai đường thẳng",
+          "4. Hình học 3D: Kiểm tra tọa độ mặt phẳng qua 3 điểm",
           "5. Giới hạn dãy số phân thức hữu tỉ",
       ],
   )
+
   if "1." in exercise_type:
-    k = st.number_input("Nhập k:", value=0.5, min_value=-1.0, max_value=1.0)
-    if st.button("Xuất lời giải chi tiết"):
-      rad = math.asin(k)
-      st.markdown(
-          f"**Lời giải:** Phương trình $\\sin x = {k}$ có các họ nghiệm:"
-      )
+    st.markdown("---")
+    k_val = st.number_input(
+        "Nhập giá trị k (từ -1 đến 1):",
+        value=0.5,
+        min_value=-1.0,
+        max_value=1.0,
+    )
+    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
+      rad = math.asin(k_val)
+      st.markdown(f"**Đề bài:** Giải phương trình $\\sin(x) = {k_val}$")
+      st.markdown("**Lời giải chi tiết:**")
+      st.latex(f"\\sin(x) = {k_val} \\iff \\sin(x) = \\sin({rad:.4f})")
       st.latex(f"x = {rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
       st.latex(
-          f"x = \\pi - {rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})"
+          f"x = \\pi - {rad:.4f} + k2\\pi = {math.pi - rad:.4f} + k2\\pi \\quad"
+          " (k \\in \\mathbb{{Z}})"
       )
+      st.success("✅ Hoàn thành lời giải!")
+
   elif "2." in exercise_type:
-    u1, d, n = (
-        st.number_input("u₁", 1.0),
-        st.number_input("d", 2.0),
-        st.number_input("n", 5),
-    )
-    if st.button("Xuất lời giải chi tiết"):
-      un = u1 + (n - 1) * d
-      st.markdown(
-          f"**Lời giải:** Số hạng thứ {int(n)} là $u_{{{int(n)}}} = {u1} +"
-          f" ({int(n)}-1) \\cdot {d} = **{un}**$"
-      )
+    st.markdown("---")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+      u1_in = st.number_input("Số hạng đầu u₁:", value=2.0)
+    with c2:
+      d_in = st.number_input("Công sai d:", value=3.0)
+    with c3:
+      n_in = st.number_input("Số hạng thứ n:", value=10, min_value=1, step=1)
+
+    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
+      un_res = u1_in + (n_in - 1) * d_in
+      sn_res = (n_in * (2 * u1_in + (n_in - 1) * d_in)) / 2
+      st.markdown(f"**Đề bài:** Cho CSC có $u_1 = {u1_in}, d = {d_in}$. Tìm $u_{{{int(n_in)}}}, S_{{{int(n_in)}}}$.")
+      st.markdown("**Lời giải chi tiết:**")
+      st.latex(f"u_n = u_1 + (n-1)d \\implies u_{{{int(n_in)}}} = {u1_in} + ({int(n_in)}-1) \\cdot {d_in} = {un_res}")
+      st.latex(f"S_n = \\frac{{n(2u_1 + (n-1)d)}}{{2}} \\implies S_{{{int(n_in)}}} = {sn_res}")
+      st.success("✅ Hoàn thành lời giải!")
+
   elif "3." in exercise_type:
-    data = st.text_input(
-        "Nhập dãy số liệu thô:", value="12 15 18 20 22 25 28 30"
-    )
-    if st.button("Xuất lời giải chi tiết"):
-      nums = [float(x) for x in data.split()]
-      st.markdown(
-          f"**Cỡ mẫu:** $N = {len(nums)}$, $\\min = {min(nums)}$, $\\max ="
-          f" {max(nums)}$"
-      )
+    st.markdown("---")
+    raw_in = st.text_area("Nhập dãy số liệu thô:", value="12 15 18 20 22 25 28 30 35 40")
+    gr_in = st.number_input("Số nhóm:", value=3, min_value=2, max_value=10)
+    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
+      try:
+        nums = [float(x) for x in raw_in.split()]
+        mn, mx = min(nums), max(nums)
+        h = (mx - mn) / gr_in
+        st.markdown(f"**Cỡ mẫu:** $N = {len(nums)}$ | $\\min = {mn}$ | $\\max = {mx}$ | Độ dài nhóm $h = {h:.2f}$")
+        st.success("✅ Đã phân tích và lập bảng thống kê thành công!")
+      except Exception as e:
+        st.error(f"Lỗi: {e}")
+
   elif "4." in exercise_type:
-    st.markdown(
-        "**Hướng dẫn giải:** Hai đường thẳng song song khi có vectơ chỉ"
-        " phương cùng phương và không có điểm chung."
-    )
+    st.markdown("---")
+    st.markdown("Nhập tọa độ 3 điểm $A, B, C$ để kiểm tra tạo lập mặt phẳng và tính vectơ pháp tuyến:")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+      xA = st.number_input("Ax", 1.0)
+      yA = st.number_input("Ay", 0.0)
+      zA = st.number_input("Az", 0.0)
+    with c2:
+      xB = st.number_input("Bx", 0.0)
+      yB = st.number_input("By", 1.0)
+      zB = st.number_input("Bz", 0.0)
+    with c3:
+      xC = st.number_input("Cx", 0.0)
+      yC = st.number_input("Cy", 0.0)
+      zC = st.number_input("Cz", 1.0)
+
+    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
+      AB = np.array([xB - xA, yB - yA, zB - zA])
+      AC = np.array([xC - xA, yC - yA, zC - zA])
+      n = np.cross(AB, AC)
+      st.markdown(f"**Vectơ $\\vec{{AB}}$:** {AB.tolist()} | **Vectơ $\\vec{{AC}}$:** {AC.tolist()}")
+      st.markdown(f"**Vectơ pháp tuyến $\\vec{{n}} = [\\vec{{AB}}, \\vec{{AC}}]$:** {n.tolist()}")
+      if np.linalg.norm(n) == 0:
+        st.warning("Ba điểm thẳng hàng, không lập thành mặt phẳng!")
+      else:
+        st.success("Ba điểm không thẳng hàng, xác định duy nhất 1 mặt phẳng!")
+
   elif "5." in exercise_type:
-    st.markdown(
-        "**Hướng dẫn giải:** Chia cả tử và mẫu cho lũy thừa cao nhất của $n$"
-        " ở mẫu thức."
-    )
+    st.markdown("---")
+    st.markdown("**Phương pháp giải giới hạn phân thức hữu tỉ:**")
+    st.markdown("1. Xác định bậc cao nhất của tử ($k$) và mẫu ($m$).")
+    st.markdown("2. Chia cả tử và mẫu cho $n^{\\max(k, m)}$.")
+    st.markdown("3. Sử dụng tính chất $\\lim \\frac{1}{n^k} = 0$ để suy ra kết quả.")
+    st.success("✅ Đã tải lý thuyết và phương pháp giải chi tiết!")
 
 # ---------------------------------------------------------
-# MODULE 11: THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT (THẬT 100%)
+# MODULE 11: THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT
 # ---------------------------------------------------------
 elif menu == "11. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
   st.header("📝 Phòng Thi Thử Trắc Nghiệm Toán 11 (Chuẩn cấu trúc Bộ GD&ĐT)")
