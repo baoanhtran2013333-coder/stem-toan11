@@ -25,6 +25,7 @@ menu = st.sidebar.selectbox(
         "8. Bài 12: Đường thẳng và mặt phẳng song song",
         "9. Giới hạn của dãy số",
         "10. Trợ lý giải bài tập Toán 11 (Tự động giải)",
+        "11. Thi thử trắc nghiệm chuẩn cấu trúc THPT",
     ],
 )
 
@@ -107,7 +108,7 @@ elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)
   st.markdown("Dán dãy số liệu thô bất kỳ vào ô bên dưới, hệ thống sẽ tự động chia nhóm có độ dài bằng nhau và xuất ra bảng tần số chuẩn SGK:")
 
   raw_data_input = st.text_area(
-      "Nhập mẫu số liệu thô (cách nhau bằng dấu cách, dấu phẩy hoặc xuống dòng):",
+      "Nhập mẫu số liệu thô (cách nhau bởi dấu cách, dấu phẩy hoặc xuống dòng):",
       value="653 632 609 572 565 535 516 514 508 505 504 504 503 499 496 492",
       height=100,
   )
@@ -453,26 +454,21 @@ elif menu == "10. Trợ lý giải bài tập Toán 11 (Tự động giải)":
 
   if exercise_type == "1. Giải phương trình lượng giác cơ bản":
     st.markdown("---")
-    st.markdown("#### Giải phương trình dạng: $a \\sin(x) + b = 0$ hoặc $\\sin(x) = k$")
-    eq_val = st.number_input("Nhập giá trị k (trong sin(x) = k):", value=0.5, min_value=-1.0, max_value=1.0, step=0.05)
+    st.markdown("#### Giải phương trình dạng: $\\sin(x) = k$")
+    eq_val = st.number_input("Nhập giá trị k:", value=0.5, min_value=-1.0, max_value=1.0, step=0.05)
     
     if st.button("📝 Xuất lời giải chi tiết", type="primary"):
       st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
-      st.markdown(f"**Đề bài:** Giải phương trình lượng giác $\\sin(x) = {eq_val}$")
-      st.markdown("**Bước 1: Kiểm tra điều kiện có nghiệm**")
-      st.markdown(f"Vì $-1 \\le {eq_val} \\le 1$ nên phương trình có nghiệm.")
-      
+      st.markdown(f"**Đề bài:** Giải phương trình $\\sin(x) = {eq_val}$")
       val_rad = math.asin(eq_val)
-      val_deg = math.degrees(val_rad)
-      st.markdown("**Bước 2: Sử dụng công thức nghiệm**")
       st.latex(f"\\sin(x) = {eq_val} \\iff \\sin(x) = \\sin({val_rad:.4f})")
-      st.markdown("**Bước 3: Viết nghiệm tổng quát**")
-      st.latex(f"\\begin{aligned} x &= {val_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}}) \\\\ x &= \\pi - {val_rad:.4f} + k2\\pi = {math.pi - val_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}}) \\end{aligned}")
-      st.success("✅ Đã hoàn thành lời giải bài toán lượng giác!")
+      st.latex(f"x = {val_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
+      st.latex(f"x = \\pi - {val_rad:.4f} + k2\\pi = {math.pi - val_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
+      st.success("✅ Hoàn thành lời giải!")
 
   elif exercise_type == "2. Tìm số hạng tổng quát của Cấp số cộng":
     st.markdown("---")
-    st.markdown("#### Tìm số hạng $u_n$ và tổng $S_n$ của Cấp số cộng $(u_n)$")
+    st.markdown("#### Tìm số hạng tổng quát và tổng Cấp số cộng")
     col_a, col_b, col_c = st.columns(3)
     with col_a:
       ex_u1 = st.number_input("Số hạng đầu u₁:", value=3.0)
@@ -483,22 +479,18 @@ elif menu == "10. Trợ lý giải bài tập Toán 11 (Tự động giải)":
 
     if st.button("📝 Xuất lời giải chi tiết", type="primary"):
       st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
-      st.markdown(f"**Đề bài:** Cho cấp số cộng $(u_n)$ có số hạng đầu $u_1 = {ex_u1}$ và công sai $d = {ex_d}$. Tìm số hạng thứ {int(ex_n)} và tổng {int(ex_n)} số hạng đầu tiên.")
-      st.markdown("**Bước 1: Áp dụng công thức số hạng tổng quát**")
       st.latex(f"u_n = u_1 + (n-1)d")
       ans_un = ex_u1 + (ex_n - 1) * ex_d
-      st.markdown(f"Thay số ta được: $u_{{{int(ex_n)}}} = {ex_u1} + ({int(ex_n)}-1) \\cdot {ex_d} = **{ans_un}**$")
-      
-      st.markdown("**Bước 2: Áp dụng công thức tính tổng $S_n$**")
+      st.markdown(f"Thay số: $u_{{{int(ex_n)}}} = {ex_u1} + ({int(ex_n)}-1) \\cdot {ex_d} = **{ans_un}**$")
       st.latex(f"S_n = \\frac{{n \\cdot (2u_1 + (n-1)d)}}{{2}}")
       ans_sn = (ex_n * (2 * ex_u1 + (ex_n - 1) * ex_d)) / 2
-      st.markdown(f"Thay số ta được: $S_{{{int(ex_n)}}} = **{ans_sn}**$")
-      st.success("✅ Đã hoàn thành lời giải cấp số cộng!")
+      st.markdown(f"Tổng $S_{{{int(ex_n)}}} = **{ans_sn}**$")
+      st.success("✅ Hoàn thành lời giải!")
 
   elif exercise_type == "3. Thống kê: Chuyển dữ liệu thô thành bảng ghép nhóm & Tính số trung bình":
     st.markdown("---")
     st.markdown("#### Giải bài tập Thống kê mẫu số liệu ghép nhóm")
-    ex_data = st.text_area("Nhập dãy số liệu thô của đề bài:", value="15 18 22 25 28 30 32 35 38 42 45 48 50")
+    ex_data = st.text_area("Nhập dãy số liệu thô:", value="15 18 22 25 28 30 32 35 38 42 45 48 50")
     ex_groups = st.number_input("Số nhóm yêu cầu:", value=4, min_value=2, max_value=10, step=1)
 
     if st.button("📝 Xuất lời giải chi tiết", type="primary"):
@@ -507,28 +499,99 @@ elif menu == "10. Trợ lý giải bài tập Toán 11 (Tự động giải)":
         mn, mx = min(nums), max(nums)
         h_val = (mx - mn) / ex_groups
         st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
-        st.markdown(f"- **Cỡ mẫu:** $N = {len(nums)}$")
-        st.markdown(f"- **Giá trị nhỏ nhất:** $\\min = {mn}$, **Giá trị lớn nhất:** $\\max = {mx}$")
-        st.markdown(f"- **Độ dài mỗi nhóm:** $h = \\frac{{\\max - \\min}}{{\\text{{số nhóm}}}} = \frac{{{mx} - {mn}}}{{{ex_groups}}} = {h_val:.2f}$")
-        
+        st.markdown(f"- Cỡ mẫu: $N = {len(nums)}$ | $\\min = {mn}$ | $\\max = {mx}$ | $h = {h_val:.2f}$")
         bins = [mn + i * h_val for i in range(int(ex_groups) + 1)]
         labels, freqs = [], []
         for i in range(len(bins) - 1):
           l, r = bins[i], bins[i + 1]
-          # Đã sửa lỗi syntax bằng cách viết chuẩn điều kiện logic thông thường
           if i == len(bins) - 2:
             cnt = sum(1 for x in nums if l <= x <= r)
           else:
             cnt = sum(1 for x in nums if l <= x < r)
           labels.append(f"[{l:.1f}; {r:.1f})")
           freqs.append(cnt)
-
         df_sol = pd.DataFrame([freqs], columns=labels, index=["Tần số (n_i)"])
-        st.markdown("**Bảng tần số mẫu số liệu ghép nhóm:**")
         st.dataframe(df_sol)
-        st.success("✅ Đã tự động lập bảng và giải chi tiết bài toán thống kê!")
+        st.success("✅ Hoàn thành lập bảng thống kê!")
       except Exception as e:
-        st.error(f"❌ Lỗi xử lý dữ liệu: {e}")
+        st.error(f"❌ Lỗi: {e}")
+
+elif menu == "11. Thi thử trắc nghiệm chuẩn cấu trúc THPT":
+  st.header("📝 Đề Thi Thử Trắc Nghiệm Toán 11 (Chuẩn cấu trúc THPT)")
+  st.markdown("Làm bài kiểm tra ngắn gọn gồm 4 câu hỏi trắc nghiệm khách quan bám sát chương trình Toán 11.")
+
+  # Danh sách câu hỏi trắc nghiệm
+  questions = [
+    {
+      "q": "Câu 1: Nghiệm của phương trình $\\sin x = \\frac{1}{2}$ là:",
+      "options": [
+        "A. $x = \\frac{\\pi}{6} + k2\\pi, x = \\frac{5\\pi}{6} + k2\\pi$",
+        "B. $x = \\frac{\\pi}{3} + k2\\pi, x = \\frac{2\\pi}{3} + k2\\pi$",
+        "C. $x = \\frac{\\pi}{6} + k\\pi$",
+        "D. $x = -\\frac{\\pi}{6} + k2\\pi$"
+      ],
+      "answer": 0,
+      "explanation": "Ta có $\\sin x = \\frac{1}{2} \\iff \\sin x = \\sin \\frac{\\pi}{6} \\iff \\left[\\begin{array}{l} x = \\frac{\\pi}{6} + k2\\pi \\\\ x = \\pi - \\frac{\\pi}{6} + k2\\pi = \\frac{5\\pi}{6} + k2\\pi \\end{array}\\right.$"
+    },
+    {
+      "q": "Câu 2: Cho một cấp số cộng $(u_n)$ có số hạng đầu $u_1 = 3$ và công sai $d = 2$. Số hạng thứ 5 ($u_5$) là:",
+      "options": [
+        "A. 9",
+        "B. 11",
+        "C. 13",
+        "D. 15"
+      ],
+      "answer": 1,
+      "explanation": "Áp dụng công thức số hạng tổng quát: $u_n = u_1 + (n-1)d \\implies u_5 = 3 + (5-1) \\cdot 2 = 3 + 8 = 11$."
+    },
+    {
+      "q": "Câu 3: Gieo một con xúc xắc cân đối và đồng chất một lần. Xác suất để xuất hiện mặt có số chấm là số nguyên tố là:",
+      "options": [
+        "A. $\\frac{1}{2}$",
+        "B. $\\frac{1}{3}$",
+        "C. $\\frac{2}{3}$",
+        "D. $\\frac{1}{6}$"
+      ],
+      "answer": 0,
+      "explanation": "Không gian mẫu $n(\\Omega) = 6$. Các mặt là số nguyên tố gồm: 2, 3, 5 (có 3 kết quả thuận lợi). Vậy $P = \\frac{3}{6} = \\frac{1}{2}$."
+    },
+    {
+      "q": "Câu 4: Giới hạn $\\lim \\frac{2n + 1}{n + 3}$ có kết quả bằng:",
+      "options": [
+        "A. $1$",
+        "B. $2$",
+        "C. $\\frac{1}{3}$",
+        "D. $0$"
+      ],
+      "answer": 1,
+      "explanation": "Chia cả tử và mẫu cho $n$, ta được $\\lim \\frac{2 + \\frac{1}{n}}{1 + \\frac{3}{n}} = \\frac{2 + 0}{1 + 0} = 2$."
+    }
+  ]
+
+  user_choices = []
+  for idx, item in enumerate(questions):
+    st.markdown(f"**{item['q']}**")
+    choice = st.radio(f"Chọn đáp án cho câu {idx+1}:", item["options"], key=f"q_{idx}")
+    user_choices.append(item["options"].index(choice))
+    st.markdown("---")
+
+  if st.button("📤 Nộp bài & Xem điểm", type="primary"):
+    score = 0
+    st.markdown("### 📊 KẾT QUẢ BÀI THI:")
+    for idx, item in enumerate(questions):
+      is_correct = (user_choices[idx] == item["answer"])
+      if is_correct:
+        score += 1
+        st.success(f"Câu {idx+1}: Chính xác! ✅")
+      else:
+        st.error(f"Câu {idx+1}: Sai rồi ❌ (Đáp án đúng là: {item['options'][item['answer']]})")
+      st.info(f"💡 **Lời giải chi tiết:** {item['explanation']}")
+    
+    total_score = (score / len(questions)) * 10
+    st.metric(label="🏆 Điểm số của bạn", value=f"{score}/{len(questions)} câu đúng ({total_score} điểm)")
+    if score == len(questions):
+      st.balloons()
+      st.markdown("🎉 **Xuất sắc! Bạn đã đạt điểm tuyệt đối!**")
 
 st.markdown("---")
 st.markdown(
