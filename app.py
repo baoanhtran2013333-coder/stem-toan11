@@ -223,7 +223,7 @@ elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian 
     st.success("✅ Đã vẽ mô hình 3D Bài 10!")
 
 # ---------------------------------------------------------
-# 7. GIỚI HẠN DÃY SỐ (lim) - ĐÃ CẬP NHẬT HIỂN THỊ CÔNG THỨC + KẾT QUẢ
+# 7. GIỚI HẠN DÃY SỐ (lim)
 # ---------------------------------------------------------
 elif menu == "7. Giới hạn của dãy số (lim)":
   st.header("lim Giới hạn của dãy số")
@@ -258,19 +258,30 @@ elif menu == "7. Giới hạn của dãy số (lim)":
         deg_den = len(dens) - 1
 
         st.markdown("---")
-        st.markdown(f"**Phân tích bậc:** Bậc tử $k = {deg_num}$ | Bậc mẫu $m = {deg_den}$")
+        st.markdown(
+            f"**Phân tích bậc:** Bậc tử $k = {deg_num}$ \vert{} Bậc mẫu $m ="
+            f" {deg_den}$"
+        )
 
         if deg_num < deg_den:
           st.success("🎯 Kết quả: **L = 0**")
-          st.latex("L = \\lim \\frac{\\text{Tử}}{\\text{Mẫu}} = 0 \\quad (\\text{do } k < m)")
+          st.latex(
+              "L = \\lim \\frac{\\text{Tử}}{\\text{Mẫu}} = 0 \\quad (\\text{do }"
+              " k < m)"
+          )
         elif deg_num == deg_den:
           ans = nums[0] / dens[0]
           st.success(f"🎯 Kết quả: **L = {ans:.4f}**")
-          st.latex(f"L = \\frac{{{nums[0]}}}{{{{dens[0]}}}} = {ans:.4f} \\quad (\\text{{do } k = m})")
+          st.latex(
+              f"L = \\frac{{{nums[0]}}}{{{dens[0]}}} = {ans:.4f} \\quad"
+              " (\\text{do } k = m)"
+          )
         else:
           sign = "+\\infty" if (nums[0] * dens[0] > 0) else "-\\infty"
           st.success(f"🎯 Kết quả: **L = {sign}**")
-          st.latex(f"L = {sign} \\quad (\\text{{do } k > m})")
+          st.latex(
+              f"L = {sign} \\quad (\\text{{do } k > m})"
+          )
       except Exception as e:
         st.error(f"❌ Lỗi định dạng đầu vào: {e}")
 
@@ -418,214 +429,4 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         {
             "q": (
                 "Câu 13: Chọn ngẫu nhiên 2 học sinh từ một nhóm gồm 5 nam và"
-                " 4 nữ. Số phần tử của không gian mẫu $n(\\Omega)$ là:"
-            ),
-            "options": [
-                "A. $C_9^2 = 36$",
-                "B. $A_9^2 = 72$",
-                "C. $9$",
-                "D. $20$",
-            ],
-            "ans": 0,
-        },
-        {
-            "q": "Câu 14: Số các chỉnh chập chập 2 của 7 phần tử ($A_7^2$) là:",
-            "options": ["A. 42", "B. 21", "C. 49", "D. 14"],
-            "ans": 0,
-        },
-        {
-            "q": "Câu 15: Số các tổ hợp chập 3 của 5 phần tử ($C_5^3$) là:",
-            "options": ["A. 10", "B. 20", "C. 60", "D. 5"],
-            "ans": 0,
-        },
-        {
-            "q": (
-                "Câu 16: Khoảng biến thiên của mẫu số liệu: 2, 5, 8, 12, 20"
-                " là:"
-            ),
-            "options": ["A. 18", "B. 20", "C. 2", "D. 10"],
-            "ans": 0,
-        },
-        {
-            "q": "Câu 17: Số trung bình của mẫu số liệu 4, 6, 8, 10 là:",
-            "options": ["A. 7", "B. 8", "C. 6", "D. 9"],
-            "ans": 0,
-        },
-        {
-            "q": "Câu 18: Cho hàm số $f(x) = 2x + 1$. Giá trị của $f'(1)$ bằng:",
-            "options": ["A. 2", "B. 1", "C. 3", "D. 0"],
-            "ans": 0,
-        },
-    ]
-
-    p1_answers = []
-    for idx, q_item in enumerate(p1_questions):
-      ans_choice = st.radio(
-          q_item["q"], q_item["options"], key=f"form_p1_q_{idx}"
-      )
-      p1_answers.append(q_item["options"].index(ans_choice))
-
-    st.subheader(
-        "PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)"
-    )
-    st.markdown(
-        "*Quy chế tính điểm:* Đúng hết 4 ý = 1.0đ | Sai 1 ý = 0.5đ | Sai 2 ý ="
-        " 0.25đ | Sai 3 ý = 0.1đ | Sai 4 ý = 0.0đ"
-    )
-
-    p2_data = [
-        (
-            "Câu 1: Cho hàm số lượng giác $y = \\sin x$.",
-            [
-                "Hàm số có tập xác định là R",
-                "Hàm số là hàm số chẵn",
-                "Hàm số có chu kỳ $2\\pi$",
-                "Giá trị lớn nhất của hàm số bằng 1",
-            ],
-        ),
-        (
-            "Câu 2: Cho cấp số cộng $(u_n)$ có $u_1 = 2, d = 3$.",
-            [
-                "Số hạng thứ 4 là $11$",
-                "Công thức số hạng tổng quát $u_n = 3n - 1$",
-                "Tổng 5 số hạng đầu tiên là $40$",
-                "Hiệu $u_{10} - u_5 = 15$",
-            ],
-        ),
-        (
-            "Câu 3: Về đường thẳng và mặt phẳng trong không gian 3D.",
-            [
-                (
-                    "Nếu đường thẳng $a$ song song với mặt phẳng $(P)$ thì $a$"
-                    " không có điểm chung với $(P)$"
-                ),
-                (
-                    "Hai đường thẳng phân biệt không cắt nhau thì song song"
-                ),
-                (
-                    "Nếu ba mặt phẳng cắt nhau theo ba giao tuyến phân biệt"
-                    " thì ba giao tuyến đó đồng quy hoặc song song"
-                ),
-                (
-                    "Qua một điểm nằm ngoài mặt phẳng cho trước, vẽ được vô"
-                    " số đường thẳng song song với mặt phẳng đó"
-                ),
-            ],
-        ),
-        (
-            "Câu 4: Về giới hạn và đạo hàm.",
-            [
-                "$\\lim \\frac{1}{n} = 0$",
-                "Đạo hàm của $y = x^2$ tại điểm $x = 1$ bằng $2$",
-                "Hàm số $y = \\tan x$ xác định với mọi $x \\in \\mathbb{R}$",
-                "$\\lim (2n^2 - n) = +\\infty$",
-            ],
-        ),
-    ]
-
-    p2_choices = []
-    standard_p2 = [
-        [True, False, True, True],
-        [True, True, True, True],
-        [True, False, True, False],
-        [True, True, False, True],
-    ]
-
-    for i, (title, sub_list) in enumerate(p2_data):
-      st.markdown(f"**{title}**")
-      sub_ans = []
-      for j, sub_text in enumerate(sub_list):
-        val = st.checkbox(f"Ý {chr(97+j)}) {sub_text}", key=f"form_p2_{i}_{j}")
-        sub_ans.append(val)
-      p2_choices.append(sub_ans)
-
-    st.subheader(
-        "PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 1.5 điểm)"
-    )
-    p3_questions = [
-        (
-            "Câu 1: Tính tổng 10 số hạng đầu của cấp số cộng có $u_1 = 1, d ="
-            " 2$. (Nhập số nguyên)"
-        ),
-        (
-            "Câu 2: Tính giá trị của giới hạn $\\lim \\frac{3n + 5}{n + 1}$."
-            " (Nhập kết quả số)"
-        ),
-        (
-            "Câu 3: Gieo 2 con xúc xắc cân đối. Tính xác suất để tổng số"
-            " chấm bằng 7. Nhập số thập phân làm tròn 2 chữ số: 0.17"
-        ),
-        (
-            "Câu 4: Đạo hàm của hàm số $y = 4x^3 - 2x + 1$ tại điểm $x = 1$"
-            " bằng bao nhiêu?"
-        ),
-        (
-            "Câu 5: Cho hình chóp có diện tích đáy bằng $6$, chiều cao bằng"
-            " $4$. Thể tích khối chóp đó bằng bao nhiêu?"
-        ),
-        (
-            "Câu 6: Giá trị lớn nhất của hàm số $y = 3 \\sin x + 4$ bằng bao"
-            " nhiêu?"
-        ),
-    ]
-    standard_p3 = ["100", "3", "0.17", "10", "8", "7"]
-
-    p3_answers = []
-    for i, q_text in enumerate(p3_questions):
-      val = st.text_input(q_text, key=f"form_p3_{i}")
-      p3_answers.append(val.strip())
-
-    submitted = st.form_submit_button(
-        "📤 Nộp bài và Chấm điểm ngay", type="primary"
-    )
-
-  if submitted:
-    # Chấm điểm Phần I
-    score_p1 = sum(
-        0.25
-        for i in range(18)
-        if p1_answers[i] == p1_questions[i]["ans"]
-    )
-
-    # Chấm điểm Phần II
-    score_p2 = 0.0
-    for i in range(4):
-      correct_count = sum(
-          1 for j in range(4) if p2_choices[i][j] == standard_p2[i][j]
-      )
-      if correct_count == 4:
-        score_p2 += 1.0
-      elif correct_count == 3:
-        score_p2 += 0.50
-      elif correct_count == 2:
-        score_p2 += 0.25
-      elif correct_count == 1:
-        score_p2 += 0.10
-
-    # Chấm điểm Phần III
-    score_p3 = sum(0.25 for i in range(6) if p3_answers[i] == standard_p3[i])
-
-    total_score = score_p1 + score_p2 + score_p3
-    st.markdown("---")
-    st.header(f"🏆 KẾT QUẢ BÀI THI THỬ: {total_score:.2f} / 10.0 ĐIỂM")
-    st.metric(
-        "Điểm Phần I (Trắc nghiệm nhiều lựa chọn)", f"{score_p1:.2f} / 4.5đ"
-    )
-    st.metric("Điểm Phần II (Đúng / Sai)", f"{score_p2:.2f} / 4.0đ")
-    st.metric("Điểm Phần III (Trả lời ngắn)", f"{score_p3:.2f} / 1.5đ")
-
-    if total_score >= 8.0:
-      st.balloons()
-      st.success("🎉 Xuất sắc! Bạn đạt kết quả loại Giỏi/Xuất sắc.")
-    else:
-      st.info(
-          "💡 Ôn tập thêm kiến thức các phần chưa chính xác để nâng cao điểm"
-          " số nhé!"
-      )
-
-st.markdown("---")
-st.markdown(
-    "<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Ôn thi"
-    " THPT Quốc Gia</p>",
-    unsafe_allow_html=True,
-)
+                " 4 nữ. Số phần tử của
