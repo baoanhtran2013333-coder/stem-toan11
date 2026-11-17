@@ -24,12 +24,13 @@ menu = st.sidebar.selectbox(
     [
         "1. Giải phương trình sin(x) = a",
         "2. Tính Cấp số cộng",
-        "3. Tính Xác suất P(A)",
-        "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)",
-        "5. Bài 9: Các số đặc trưng đo xu thế trung tâm",
-        "6. Bài 10: Đường thẳng và mặt phẳng trong không gian (3D)",
-        "7. Giới hạn của dãy số (lim)",
-        "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới",
+        "3. Tính Cấp số nhân",
+        "4. Tính Xác suất P(A)",
+        "5. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)",
+        "6. Bài 9: Các số đặc trưng đo xu thế trung tâm",
+        "7. Bài 10: Đường thẳng và mặt phẳng trong không gian (3D)",
+        "8. Giới hạn của dãy số (lim)",
+        "9. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới",
     ],
     key="main_menu",
 )
@@ -72,7 +73,7 @@ elif menu == "2. Tính Cấp số cộng":
         "Số lượng số hạng (n):", value=5, min_value=1, step=1, key="m2_n"
     )
 
-  if st.button("Tính kết quả", type="primary", key="m2_btn"):
+  if st.button("Tính kết quả Cấp số cộng", type="primary", key="m2_btn"):
     n_int = int(n)
     un = u1 + (n_int - 1) * d
     sn = (n_int * (2 * u1 + (n_int - 1) * d)) / 2
@@ -81,9 +82,33 @@ elif menu == "2. Tính Cấp số cộng":
     st.metric(label=f"Tổng {n_int} số hạng đầu tiên (Sₙ)", value=f"{sn}")
 
 # ---------------------------------------------------------
-# 3. XÁC SUẤT P(A)
+# 3. CẤP SỐ NHÂN (MỚI BỔ SUNG)
 # ---------------------------------------------------------
-elif menu == "3. Tính Xác suất P(A)":
+elif menu == "3. Tính Cấp số nhân":
+  st.header("📈 Tính toán Cấp số nhân $(u_n)$")
+  c1, c2, c3 = st.columns(3)
+  with c1:
+    u1_csn = st.number_input("Số hạng đầu (u₁):", value=2.0, step=1.0, key="m_csn_u1")
+  with c2:
+    q_csn = st.number_input("Công bội (q):", value=3.0, step=1.0, key="m_csn_q")
+  with c3:
+    n_csn = st.number_input("Số lượng số hạng (n):", value=5, min_value=1, step=1, key="m_csn_n")
+
+  if st.button("Tính kết quả Cấp số nhân", type="primary", key="m_csn_btn"):
+    n_int = int(n_csn)
+    un = u1_csn * (q_csn ** (n_int - 1))
+    if abs(q_csn - 1.0) < 1e-9:
+      sn = n_int * u1_csn
+    else:
+      sn = u1_csn * (1 - q_csn ** n_int) / (1 - q_csn)
+    st.success("📊 Kết quả tính toán Cấp số nhân:")
+    st.metric(label=f"Số hạng thứ {n_int} (uₙ)", value=f"{un}")
+    st.metric(label=f"Tổng {n_int} số hạng đầu tiên (Sₙ)", value=f"{sn}")
+
+# ---------------------------------------------------------
+# 4. XÁC SUẤT P(A)
+# ---------------------------------------------------------
+elif menu == "4. Tính Xác suất P(A)":
   st.header("🎲 Tính Xác suất Biến cố $P(A)$")
   c1, c2 = st.columns(2)
   with c1:
@@ -109,9 +134,9 @@ elif menu == "3. Tính Xác suất P(A)":
       st.error("❌ $n(A)$ không thể lớn hơn không gian mẫu!")
 
 # ---------------------------------------------------------
-# 4. BÀI 8 - MẪU SỐ LIỆU GHÉP NHÓM
+# 5. BÀI 8 - MẪU SỐ LIỆU GHÉP NHÓM
 # ---------------------------------------------------------
-elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)":
+elif menu == "5. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)":
   st.header("📊 Bài 8: Mẫu số liệu ghép nhóm")
   raw_data_input = st.text_area(
       "Nhập mẫu số liệu thô:",
@@ -156,9 +181,9 @@ elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)
       st.error(f"❌ Lỗi xử lý: {e}")
 
 # ---------------------------------------------------------
-# 5. BÀI 9 - SỐ ĐẶC TRƯNG ĐO XU THẾ TRUNG TÂM
+# 6. BÀI 9 - SỐ ĐẶC TRƯNG ĐO XU THẾ TRUNG TÂM
 # ---------------------------------------------------------
-elif menu == "5. Bài 9: Các số đặc trưng đo xu thế trung tâm":
+elif menu == "6. Bài 9: Các số đặc trưng đo xu thế trung tâm":
   st.header("📈 Bài 9: Các số đặc trưng đo xu thế trung tâm")
   c1, c2 = st.columns(2)
   with c1:
@@ -188,9 +213,9 @@ elif menu == "5. Bài 9: Các số đặc trưng đo xu thế trung tâm":
       st.error("❌ Định dạng đầu vào không hợp lệ!")
 
 # ---------------------------------------------------------
-# 6. BÀI 10 - MẶT PHẲNG QUA 3 ĐIỂM (3D)
+# 7. BÀI 10 - MẶT PHẲNG QUA 3 ĐIỂM (3D)
 # ---------------------------------------------------------
-elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian (3D)":
+elif menu == "7. Bài 10: Đường thẳng và mặt phẳng trong không gian (3D)":
   st.header("📐 Bài 10: Mặt phẳng qua 3 điểm trong không gian 3D")
   c1, c2, c3 = st.columns(3)
   with c1:
@@ -223,9 +248,9 @@ elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian 
     st.success("✅ Đã vẽ mô hình 3D Bài 10!")
 
 # ---------------------------------------------------------
-# 7. GIỚI HẠN DÃY SỐ (lim)
+# 8. GIỚI HẠN DÃY SỐ (lim)
 # ---------------------------------------------------------
-elif menu == "7. Giới hạn của dãy số (lim)":
+elif menu == "8. Giới hạn của dãy số (lim)":
   st.header("lim Giới hạn của dãy số")
   sub_lim = st.selectbox(
       "Chọn dạng toán:", ["Phân thức đa thức", "Biểu thức chứa căn"], key="m7_sub"
@@ -268,7 +293,7 @@ elif menu == "7. Giới hạn của dãy số (lim)":
         elif deg_num == deg_den:
           ans = nums[0] / dens[0]
           st.success(f"🎯 Kết quả: L = {ans:.4f}")
-          st.latex(f"L = \frac{{{nums[0]}}}{{{dens[0]}}} = {ans:.4f}")
+          st.latex(f"L = \\frac{{{nums[0]}}}{{{dens[0]}}} = {ans:.4f}")
         else:
           sign = "+\\infty" if (nums[0] * dens[0] > 0) else "-\\infty"
           st.success(f"🎯 Kết quả: L = {sign}")
@@ -277,9 +302,9 @@ elif menu == "7. Giới hạn của dãy số (lim)":
         st.error(f"❌ Lỗi định dạng đầu vào: {e}")
 
 # ---------------------------------------------------------
-# 8. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT (CÓ TÍNH NĂNG RESET)
+# 9. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT (CÓ TÍNH NĂNG RESET)
 # ---------------------------------------------------------
-elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
+elif menu == "9. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
   st.header("📝 Phòng Thi Thử Trắc Nghiệm Toán 11")
 
   # Khởi tạo trạng thái nộp bài nếu chưa có
@@ -290,7 +315,6 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
   if st.session_state.submitted:
     st.success("🎉 Bài làm của bạn đã được chấm điểm thành công!")
 
-    # Lấy lại dữ liệu kết quả từ session_state để hiển thị
     total_score = st.session_state.total_score
     score_p1 = st.session_state.score_p1
     score_p2 = st.session_state.score_p2
@@ -348,7 +372,6 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
       st.info(f"💡 **Hướng dẫn giải:** {st.session_state.explain_p3[i]}")
 
     st.markdown("---")
-    # NÚT RESET ĐỂ LÀM BÀI MỚI
     if st.button("🔄 Làm bài mới (Reset)", type="primary", use_container_width=True):
       st.session_state.submitted = False
       st.rerun()
@@ -744,14 +767,12 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
       )
 
     if submitted:
-      # Tính điểm Phần I
       score_p1 = sum(
           0.25
           for i in range(18)
           if p1_answers[i] == p1_questions[i]["ans"]
       )
 
-      # Tính điểm Phần II
       score_p2 = 0.0
       p2_item_scores = []
       for i in range(4):
@@ -770,11 +791,9 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         score_p2 += p2_score_item
         p2_item_scores.append(p2_score_item)
 
-      # Tính điểm Phần III
       score_p3 = sum(0.25 for i in range(6) if p3_answers[i] == standard_p3[i])
       total_score = score_p1 + score_p2 + score_p3
 
-      # Lưu vào session_state để hiển thị sau khi rerun
       st.session_state.submitted = True
       st.session_state.total_score = total_score
       st.session_state.score_p1 = score_p1
