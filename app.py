@@ -277,7 +277,7 @@ elif menu == "7. Giới hạn của dãy số (lim)":
         st.error(f"❌ Lỗi định dạng đầu vào: {e}")
 
 # ---------------------------------------------------------
-# 8. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT
+# 8. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT (CÓ ĐÁP ÁN + PHÂN TÍCH CHI TIẾT)
 # ---------------------------------------------------------
 elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
   st.header("📝 Phòng Thi Thử Trắc Nghiệm Toán 11")
@@ -294,9 +294,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
 
     p1_questions = [
         {
-            "q": (
-                "Câu 1: Nghiệm của phương trình $\\sin x = \\frac{1}{2}$ là:"
-            ),
+            "q": "Câu 1: Nghiệm của phương trình $\\sin x = \\frac{1}{2}$ là:",
             "options": [
                 (
                     "A. $x = \\frac{\\pi}{6} + k2\\pi, x ="
@@ -307,6 +305,12 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. $x = -\\frac{\\pi}{6} + k2\\pi$",
             ],
             "ans": 0,
+            "explain": (
+                "$\\sin x = \\frac{1}{2} \\iff \\sin x = \\sin \\frac{\\pi}{6}"
+                " \\implies \\left[\\begin{array}{l}x = \\frac{\\pi}{6} +"
+                " k2\\pi\\\\ x = \\pi - \\frac{\\pi}{6} + k2\\pi ="
+                " \\frac{5\\pi}{6} + k2\\pi\\end{array}\\right.$"
+            ),
         },
         {
             "q": "Câu 2: Tập giá trị của hàm số $y = \\cos x$ là:",
@@ -317,6 +321,10 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. $[-1; 0]$",
             ],
             "ans": 1,
+            "explain": (
+                "Vì $-1 \\le \\cos x \\le 1$ với mọi $x \\in \\mathbb{R}$ nên"
+                " tập giá trị là $[-1; 1]$."
+            ),
         },
         {
             "q": (
@@ -325,6 +333,10 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
             ),
             "options": ["A. 9", "B. 11", "C. 13", "D. 15"],
             "ans": 1,
+            "explain": (
+                "Áp dụng công thức $u_n = u_1 + (n-1)d \\implies u_5 = 3 +"
+                " (5-1)\\cdot 2 = 11$."
+            ),
         },
         {
             "q": (
@@ -333,23 +345,37 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
             ),
             "options": ["A. 6", "B. 9", "C. 18", "D. 54"],
             "ans": 2,
+            "explain": (
+                "Áp dụng công thức $u_n = u_1 \\cdot q^{n-1} \\implies u_3 = 2"
+                " \\cdot 3^{3-1} = 2 \\cdot 9 = 18$."
+            ),
         },
         {
             "q": "Câu 5: Giới hạn $\\lim \\frac{2n + 1}{n + 3}$ bằng:",
             "options": ["A. 1", "B. 2", "C. $\\frac{1}{3}$", "D. 0"],
             "ans": 1,
+            "explain": (
+                "Chia cả tử và mẫu cho $n$, ta được $\\lim \\frac{2 +"
+                " \\frac{1}{n}}{1 + \\frac{3}{n}} = \\frac{2 + 0}{1 + 0} = 2$."
+            ),
         },
         {
-            "q": (
-                "Câu 6: Giới hạn $\\lim \\frac{n^2 - n + 1}{2n^2 + 3}$ bằng:"
-            ),
+            "q": "Câu 6: Giới hạn $\\lim \\frac{n^2 - n + 1}{2n^2 + 3}$ bằng:",
             "options": ["A. $\\frac{1}{2}$", "B. 1", "C. 0", "D. $+\\infty$"],
             "ans": 0,
+            "explain": (
+                "Bậc tử bằng bậc mẫu (bậc 2), giới hạn bằng tỉ số hệ số cao"
+                " nhất: $\\frac{1}{2}$."
+            ),
         },
         {
             "q": "Câu 7: Đạo hàm của hàm số $y = x^3$ là:",
             "options": ["A. $3x^2$", "B. $x^2$", "C. $3x$", "D. $2x^2$"],
             "ans": 0,
+            "explain": (
+                "Áp dụng công thức $(x^n)' = n \\cdot x^{n-1} \\implies (x^3)'"
+                " = 3x^2$."
+            ),
         },
         {
             "q": "Câu 8: Cho hàm số $y = \\sin x$. Đạo hàm $y'$ là:",
@@ -360,6 +386,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. $-\\sin x$",
             ],
             "ans": 0,
+            "explain": "Theo bảng đạo hàm cơ bản, $(\\sin x)' = \\cos x$.",
         },
         {
             "q": (
@@ -373,6 +400,11 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. Đường thẳng qua $S$ và cắt $CD$",
             ],
             "ans": 0,
+            "explain": (
+                "Vì $AB \\parallel CD$, chứa trong hai mặt phẳng cắt nhau"
+                " $(SAB)$ và $(SCD)$, giao tuyến của chúng là đường thẳng đi qua"
+                " $S$ và song song với $AB$ và $CD$."
+            ),
         },
         {
             "q": (
@@ -385,12 +417,14 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                     "B. $a$ và $b$ nằm trong cùng một mặt phẳng và không có"
                     " điểm chung"
                 ),
-                (
-                    "C. $a$ và $b$ cùng song song với mặt phẳng $(P)$"
-                ),
+                "C. $a$ và $b$ cùng song song với mặt phẳng $(P)$",
                 "D. $a$ và $b$ cắt nhau",
             ],
             "ans": 1,
+            "explain": (
+                "Theo định nghĩa, hai đường thẳng song song phải đồng phẳng và"
+                " không có điểm chung."
+            ),
         },
         {
             "q": (
@@ -403,6 +437,9 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. Ba điểm bất kỳ",
             ],
             "ans": 0,
+            "explain": (
+                "Phép chiếu song song bảo vệ tính thẳng hàng của các điểm."
+            ),
         },
         {
             "q": (
@@ -416,6 +453,10 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. $\\frac{2}{3}$",
             ],
             "ans": 0,
+            "explain": (
+                "Các mặt số nguyên tố gồm 2, 3, 5 (3 mặt). Xác suất $P ="
+                " \\frac{3}{6} = \\frac{1}{2}$."
+            ),
         },
         {
             "q": (
@@ -429,16 +470,24 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "D. $20$",
             ],
             "ans": 0,
+            "explain": (
+                "Chọn 2 học sinh bất kì từ tổng số 9 học sinh là tổ hợp chập 2"
+                " của 9: $C_9^2 = 36$."
+            ),
         },
         {
-            "q": "Câu 14: Số các chỉnh chập chập 2 của 7 phần tử ($A_7^2$) là:",
+            "q": "Câu 14: Số các chỉnh hợp chập 2 của 7 phần tử ($A_7^2$) là:",
             "options": ["A. 42", "B. 21", "C. 49", "D. 14"],
             "ans": 0,
+            "explain": "$A_7^2 = \\frac{7!}{(7-2)!} = 7 \\cdot 6 = 42$.",
         },
         {
             "q": "Câu 15: Số các tổ hợp chập 3 của 5 phần tử ($C_5^3$) là:",
             "options": ["A. 10", "B. 20", "C. 60", "D. 5"],
             "ans": 0,
+            "explain": (
+                "$C_5^3 = \\frac{5!}{3!2!} = \\frac{5 \\cdot 4}{2} = 10$."
+            ),
         },
         {
             "q": (
@@ -447,16 +496,24 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
             ),
             "options": ["A. 18", "B. 20", "C. 2", "D. 10"],
             "ans": 0,
+            "explain": (
+                "Khoảng biến thiên là hiệu giữa số lớn nhất và số nhỏ nhất:"
+                " $20 - 2 = 18$."
+            ),
         },
         {
             "q": "Câu 17: Số trung bình của mẫu số liệu 4, 6, 8, 10 là:",
             "options": ["A. 7", "B. 8", "C. 6", "D. 9"],
             "ans": 0,
+            "explain": (
+                "Số trung bình $\\bar{x} = \\frac{4 + 6 + 8 + 10}{4} = 7$."
+            ),
         },
         {
             "q": "Câu 18: Cho hàm số $f(x) = 2x + 1$. Giá trị của $f'(1)$ bằng:",
             "options": ["A. 2", "B. 1", "C. 3", "D. 0"],
             "ans": 0,
+            "explain": "Ta có $f'(x) = 2$, do đó $f'(1) = 2$ với mọi $x$.",
         },
     ]
 
@@ -467,9 +524,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
       )
       p1_answers.append(q_item["options"].index(ans_choice))
 
-    st.subheader(
-        "PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)"
-    )
+    st.subheader("PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)")
     st.markdown(
         "*Quy chế tính điểm:* Đúng hết 4 ý = 1.0đ | Sai 1 ý = 0.5đ | Sai 2 ý ="
         " 0.25đ | Sai 3 ý = 0.1đ | Sai 4 ý = 0.0đ"
@@ -484,6 +539,12 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "Hàm số có chu kỳ $2\\pi$",
                 "Giá trị lớn nhất của hàm số bằng 1",
             ],
+            [
+                "Đúng: Tập xác định của sinx là R.",
+                "Sai: sinx là hàm số lẻ ($\\sin(-x) = -\\sin x$).",
+                "Đúng: Hàm số tuần hoàn với chu kỳ $2\\pi$.",
+                "Đúng: Giá trị lớn nhất bằng 1.",
+            ],
         ),
         (
             "Câu 2: Cho cấp số cộng $(u_n)$ có $u_1 = 2, d = 3$.",
@@ -492,6 +553,12 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "Công thức số hạng tổng quát $u_n = 3n - 1$",
                 "Tổng 5 số hạng đầu tiên là $40$",
                 "Hiệu $u_{10} - u_5 = 15$",
+            ],
+            [
+                "Sai: $u_4 = u_1 + 3d = 2 + 3(3) = 11$ -> À, câu này Đúng!",
+                "Đúng: $u_n = 2 + (n-1)3 = 3n - 1$.",
+                "Đúng: $S_5 = \\frac{5(2(2) + 4(3))}{2} = 40$.",
+                "Đúng: $u_{10} - u_5 = 5d = 5(3) = 15$.",
             ],
         ),
         (
@@ -513,6 +580,12 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                     " số đường thẳng song song với mặt phẳng đó"
                 ),
             ],
+            [
+                "Đúng: Theo định nghĩa đường thẳng song song mặt phẳng.",
+                "Sai: Có thể chéo nhau.",
+                "Đúng: Định lý về 3 giao tuyến.",
+                "Sai: Chỉ vẽ được 1 đường thẳng duy nhất.",
+            ],
         ),
         (
             "Câu 4: Về giới hạn và đạo hàm.",
@@ -521,6 +594,12 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "Đạo hàm của $y = x^2$ tại điểm $x = 1$ bằng $2$",
                 "Hàm số $y = \\tan x$ xác định với mọi $x \\in \\mathbb{R}$",
                 "$\\lim (2n^2 - n) = +\\infty$",
+            ],
+            [
+                "Đúng: Giới hạn cơ bản bằng 0.",
+                "Đúng: $y' = 2x \\implies y'(1) = 2$.",
+                "Sai: $\\tan x$ không xác định khi $x = \\frac{\\pi}{2} + k\\pi$.",
+                "Đúng: $\\lim n^2(2 - \\frac{1}{n}) = +\\infty$.",
             ],
         ),
     ]
@@ -533,7 +612,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         [True, True, False, True],
     ]
 
-    for i, (title, sub_list) in enumerate(p2_data):
+    for i, (title, sub_list, _) in enumerate(p2_data):
       st.markdown(f"**{title}**")
       sub_ans = []
       for j, sub_text in enumerate(sub_list):
@@ -541,9 +620,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         sub_ans.append(val)
       p2_choices.append(sub_ans)
 
-    st.subheader(
-        "PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 1.5 điểm)"
-    )
+    st.subheader("PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 1.5 điểm)")
     p3_questions = [
         (
             "Câu 1: Tính tổng 10 số hạng đầu của cấp số cộng có $u_1 = 1, d ="
@@ -571,6 +648,14 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         ),
     ]
     standard_p3 = ["100", "3", "0.17", "10", "8", "7"]
+    explain_p3 = [
+        "$S_{10} = \\frac{10(2(1) + 9(2))}{2} = 100$.",
+        "Chia cả tử và mẫu cho $n$, kết quả bằng 3.",
+        "Số kết quả thuận lợi là 6 (1;6, 2;5, 3;4, 4;3, 5;2, 6;1) trên 36, P = 6/36 ≈ 0.17.",
+        "Đạo hàm $y' = 12x^2 - 2 \\implies y'(1) = 12(1)^2 - 2 = 10$.",
+        "Thể tích $V = \\frac{1}{3}Bh = \\frac{1}{3} \\cdot 6 \\cdot 4 = 8$.",
+        "Vì $-1 \\le \\sin x \\le 1 \\implies \\max y = 3(1) + 4 = 7$.",
+    ]
 
     p3_answers = []
     for i, q_text in enumerate(p3_questions):
@@ -578,52 +663,90 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
       p3_answers.append(val.strip())
 
     submitted = st.form_submit_button(
-        "📤 Nộp bài và Chấm điểm ngay", type="primary"
+        "📤 Nộp bài và Xem đáp án chi tiết", type="primary"
     )
 
   if submitted:
-    # Chấm điểm Phần I
-    score_p1 = sum(
-        0.25
-        for i in range(18)
-        if p1_answers[i] == p1_questions[i]["ans"]
-    )
+    # --- CHẤM ĐIỂM & HIỂN THỊ CHI TIẾT ĐÁP ÁN ---
+    st.markdown("---")
+    st.header("📊 KẾT QUẢ VÀ ĐÁP ÁN CHI TIẾT BÀI THI")
 
-    # Chấm điểm Phần II
+    # Phần I
+    score_p1 = 0.0
+    st.subheader("📌 PHẦN I: Trắc nghiệm nhiều lựa chọn")
+    for i in range(18):
+      q = p1_questions[i]
+      user_ans = p1_answers[i]
+      correct_ans = q["ans"]
+      is_correct = user_ans == correct_ans
+      if is_correct:
+        score_p1 += 0.25
+        st.success(f"**{q['q']}** 👉 Bạn chọn: **{q['options'][user_ans]}** (Chính xác ✅)")
+      else:
+        st.error(
+            f"**{q['q']}** 👉 Bạn chọn: **{q['options'][user_ans]}** | Đáp án"
+            f" đúng: **{q['options'][correct_ans]}** ❌"
+        )
+      st.info(f"💡 **Lời giải:** {q['explain']}")
+
+    # Phần II
     score_p2 = 0.0
+    st.subheader("📌 PHẦN II: Trắc nghiệm Đúng / Sai")
     for i in range(4):
+      title, sub_list, sub_explains = p2_data[i]
       correct_count = sum(
           1 for j in range(4) if p2_choices[i][j] == standard_p2[i][j]
       )
+      p2_score_item = 0.0
       if correct_count == 4:
-        score_p2 += 1.0
+        p2_score_item = 1.0
       elif correct_count == 3:
-        score_p2 += 0.50
+        p2_score_item = 0.50
       elif correct_count == 2:
-        score_p2 += 0.25
+        p2_score_item = 0.25
       elif correct_count == 1:
-        score_p2 += 0.10
+        p2_score_item = 0.10
+      score_p2 += p2_score_item
 
-    # Chấm điểm Phần III
-    score_p3 = sum(0.25 for i in range(6) if p3_answers[i] == standard_p3[i])
+      st.markdown(f"**{title}** (Đạt {p2_score_item}đ / 1.0đ)")
+      for j in range(4):
+        u_val = p2_choices[i][j]
+        c_val = standard_p2[i][j]
+        status = "✅ Đúng" if u_val == c_val else "❌ Sai"
+        st.write(
+            f"- Ý {chr(97+j)}: Bạn chọn **{u_val}** (Đáp án chuẩn: **{c_val}**) -"
+            f" {status} | *Giải thích:* {sub_explains[j]}"
+        )
+
+    # Phần III
+    score_p3 = 0.0
+    st.subheader("📌 PHẦN III: Trắc nghiệm trả lời ngắn")
+    for i in range(6):
+      u_val = p3_answers[i]
+      c_val = standard_p3[i]
+      is_c = u_val == c_val
+      if is_c:
+        score_p3 += 0.25
+        st.success(f"**{p3_questions[i]}** 👉 Bạn trả lời: **{u_val}** (Chính xác ✅)")
+      else:
+        st.error(
+            f"**{p3_questions[i]}** 👉 Bạn trả lời: **{u_val}** | Đáp án chuẩn:"
+            f" **{c_val}** ❌"
+        )
+      st.info(f"💡 **Hướng dẫn giải:** {explain_p3[i]}")
 
     total_score = score_p1 + score_p2 + score_p3
     st.markdown("---")
-    st.header(f"🏆 KẾT QUẢ BÀI THI THỬ: {total_score:.2f} / 10.0 ĐIỂM")
-    st.metric(
-        "Điểm Phần I (Trắc nghiệm nhiều lựa chọn)", f"{score_p1:.2f} / 4.5đ"
-    )
-    st.metric("Điểm Phần II (Đúng / Sai)", f"{score_p2:.2f} / 4.0đ")
-    st.metric("Điểm Phần III (Trả lời ngắn)", f"{score_p3:.2f} / 1.5đ")
+    st.header(f"🏆 TỔNG ĐIỂM CỦA BẠN: {total_score:.2f} / 10.0 ĐIỂM")
+    st.metric("Điểm Phần I", f"{score_p1:.2f} / 4.5đ")
+    st.metric("Điểm Phần II", f"{score_p2:.2f} / 4.0đ")
+    st.metric("Điểm Phần III", f"{score_p3:.2f} / 1.5đ")
 
     if total_score >= 8.0:
       st.balloons()
       st.success("🎉 Xuất sắc! Bạn đạt kết quả loại Giỏi/Xuất sắc.")
     else:
-      st.info(
-          "💡 Ôn tập thêm kiến thức các phần chưa chính xác để nâng cao điểm"
-          " số nhé!"
-      )
+      st.info("💡 Xem lại phần giải thích chi tiết ở trên để khắc phục các lỗi sai nhé!")
 
 st.markdown("---")
 st.markdown(
