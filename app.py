@@ -490,7 +490,6 @@ elif menu == "10. Trợ lý giải bài tập Toán 11 (Tự động giải)":
       st.markdown(f"Thay số ta được: $u_{{{int(ex_n)}}} = {ex_u1} + ({int(ex_n)}-1) \\cdot {ex_d} = **{ans_un}**$")
       
       st.markdown("**Bước 2: Áp dụng công thức tính tổng $S_n$**")
-      # Đã sửa lỗi syntax bằng cách dùng dấu ngoặc tròn thay cho ngoặc vuông trong f-string
       st.latex(f"S_n = \\frac{{n \\cdot (2u_1 + (n-1)d)}}{{2}}")
       ans_sn = (ex_n * (2 * ex_u1 + (ex_n - 1) * ex_d)) / 2
       st.markdown(f"Thay số ta được: $S_{{{int(ex_n)}}} = **{ans_sn}**$")
@@ -510,13 +509,17 @@ elif menu == "10. Trợ lý giải bài tập Toán 11 (Tự động giải)":
         st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
         st.markdown(f"- **Cỡ mẫu:** $N = {len(nums)}$")
         st.markdown(f"- **Giá trị nhỏ nhất:** $\\min = {mn}$, **Giá trị lớn nhất:** $\\max = {mx}$")
-        st.markdown(f"- **Độ dài mỗi nhóm:** $h = \\frac{{\\max - \\min}}{{\\text{{số nhóm}}}} = \\frac{{{mx} - {mn}}}{{{ex_groups}}} = {h_val:.2f}$")
+        st.markdown(f"- **Độ dài mỗi nhóm:** $h = \\frac{{\\max - \\min}}{{\\text{{số nhóm}}}} = \frac{{{mx} - {mn}}}{{{ex_groups}}} = {h_val:.2f}$")
         
         bins = [mn + i * h_val for i in range(int(ex_groups) + 1)]
         labels, freqs = [], []
         for i in range(len(bins) - 1):
           l, r = bins[i], bins[i + 1]
-          cnt = sum(1 for x in nums if l <= x <= r if i == len(bins)-2 else l <= x < r)
+          # Đã sửa lỗi syntax bằng cách viết chuẩn điều kiện logic thông thường
+          if i == len(bins) - 2:
+            cnt = sum(1 for x in nums if l <= x <= r)
+          else:
+            cnt = sum(1 for x in nums if l <= x < r)
           labels.append(f"[{l:.1f}; {r:.1f})")
           freqs.append(cnt)
 
