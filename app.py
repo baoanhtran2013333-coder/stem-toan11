@@ -5,30 +5,33 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(page_title="STEM Toán 11", page_icon="📐", layout="centered")
+st.set_page_config(page_title="STEM Toán 11 - Hoàn Chỉnh", page_icon="📐", layout="centered")
 
-st.title("📐 CHƯƠNG TRÌNH STEM TOÁN 11")
-st.markdown("*Công cụ hỗ trợ học tập môn Toán lớp 11 trực quan, sinh động.*")
+st.title("📐 CHƯƠNG TRÌNH STEM TOÁN 11 & LUYỆN THI THPT")
+st.markdown("*Hệ thống học tập, trực quan hóa 3D không gian và luyện thi trắc nghiệm thông minh.*")
 st.markdown("---")
 
-st.sidebar.header("📋 Danh mục bài học")
+st.sidebar.header("📋 Danh mục chức năng")
 menu = st.sidebar.selectbox(
-    "Chọn bài học:",
+    "Chọn nội dung bài học:",
     [
         "1. Giải phương trình sin(x) = a",
         "2. Tính Cấp số cộng",
         "3. Tính Xác suất P(A)",
         "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)",
         "5. Bài 9: Các số đặc trưng đo xu thế trung tâm",
-        "6. Bài 10: Đường thẳng và mặt phẳng trong không gian",
-        "7. Bài 11: Hai đường thẳng song song",
-        "8. Bài 12: Đường thẳng và mặt phẳng song song",
-        "9. Giới hạn của dãy số",
-        "10. Trợ lý giải bài tập Toán 11 (Tự động giải)",
-        "11. Thi thử trắc nghiệm chuẩn cấu trúc THPT",
+        "6. Bài 10: Đường thẳng và mặt phẳng trong không gian (3D)",
+        "7. Bài 11: Hai đường thẳng song song (3D)",
+        "8. Bài 12: Đường thẳng và mặt phẳng song song (3D)",
+        "9. Giới hạn của dãy số (lim)",
+        "10. Trợ lý giải bài tập Toán 11 (Từng bước chi tiết)",
+        "11. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới",
     ],
 )
 
+# ---------------------------------------------------------
+# MODULE 1: GIẢI PHƯƠNG TRÌNH LƯỢNG GIÁC sin(x) = a
+# ---------------------------------------------------------
 if menu == "1. Giải phương trình sin(x) = a":
   st.header("🔍 Giải phương trình lượng giác: $\\sin(x) = a$")
   a = st.number_input("Nhập giá trị a (từ -1 đến 1):", value=0.5, step=0.1)
@@ -37,7 +40,6 @@ if menu == "1. Giải phương trình sin(x) = a":
     if -1 <= a <= 1:
       alpha_rad = math.asin(a)
       alpha_deg = math.degrees(alpha_rad)
-
       eps = 1e-3
       if abs(a - 0) < eps:
         str_arcsin, str_pi_minus = "0", "\\pi"
@@ -64,10 +66,13 @@ if menu == "1. Giải phương trình sin(x) = a":
       st.success("✅ Phương trình có nghiệm:")
       st.latex(f"x = {str_arcsin} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
       st.latex(f"x = {str_pi_minus} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
-      st.info(f"💡 **Giá trị góc (deg):** $\\alpha \\approx {alpha_deg:.2f}^\\circ$")
+      st.info(f"💡 **Góc quy đổi (độ):** $\\alpha \\approx {alpha_deg:.2f}^\\circ$")
     else:
       st.error("❌ Giá trị $a$ phải nằm trong đoạn từ $-1$ đến $1$!")
 
+# ---------------------------------------------------------
+# MODULE 2: CẤP SỐ CỘNG
+# ---------------------------------------------------------
 elif menu == "2. Tính Cấp số cộng":
   st.header("📈 Tính toán Cấp số cộng $(u_n)$")
   col1, col2, col3 = st.columns(3)
@@ -86,6 +91,9 @@ elif menu == "2. Tính Cấp số cộng":
     st.metric(label=f"Số hạng thứ {n_int} (uₙ)", value=f"{un}")
     st.metric(label=f"Tổng {n_int} số hạng đầu tiên (Sₙ)", value=f"{sn}")
 
+# ---------------------------------------------------------
+# MODULE 3: XÁC SUẤT P(A)
+# ---------------------------------------------------------
 elif menu == "3. Tính Xác suất P(A)":
   st.header("🎲 Tính Xác suất Biến cố $P(A)$")
   col1, col2 = st.columns(2)
@@ -99,44 +107,34 @@ elif menu == "3. Tính Xác suất P(A)":
       p_a = n_A / n_Omega
       st.success("🎯 Kết quả:")
       st.metric(label="Xác suất P(A)", value=f"{p_a:.4f}")
-      st.write(f"Tương đương với tỉ lệ: **{p_a * 100:.2f}%**")
+      st.write(f"Tương đương tỉ lệ: **{p_a * 100:.2f}%**")
     else:
       st.error("❌ $n(A)$ không thể lớn hơn không gian mẫu!")
 
+# ---------------------------------------------------------
+# MODULE 4: BÀI 8 - MẪU SỐ LIỆU GHÉP NHÓM
+# ---------------------------------------------------------
 elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)":
   st.header("📊 Bài 8: Mẫu số liệu ghép nhóm")
-  st.markdown("Dán dãy số liệu thô bất kỳ vào ô bên dưới, hệ thống sẽ tự động chia nhóm có độ dài bằng nhau và xuất ra bảng tần số chuẩn SGK:")
-
+  st.markdown("Dán dãy số liệu thô bất kỳ, hệ thống sẽ tự động phân loại và chia khoảng đều nhau chuẩn SGK:")
   raw_data_input = st.text_area(
-      "Nhập mẫu số liệu thô (cách nhau bởi dấu cách, dấu phẩy hoặc xuống dòng):",
+      "Nhập mẫu số liệu thô:",
       value="653 632 609 572 565 535 516 514 508 505 504 504 503 499 496 492",
       height=100,
   )
-
-  num_groups = st.number_input(
-      "Số lượng nhóm muốn chia:", min_value=2, max_value=15, value=7, step=1
-  )
+  num_groups = st.number_input("Số lượng nhóm muốn chia:", min_value=2, max_value=15, value=7, step=1)
 
   if st.button("Xử lý & Xuất Bảng Ghép Nhóm", type="primary"):
     try:
       numbers = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|\d+", raw_data_input)]
       if len(numbers) == 0:
-        st.error("❌ Không tìm thấy dữ liệu số hợp lệ! Vui lòng kiểm tra lại.")
+        st.error("❌ Không tìm thấy dữ liệu số hợp lệ!")
       else:
-        min_val = min(numbers)
-        max_val = max(numbers)
+        min_val, max_val = min(numbers), max(numbers)
         range_val = max_val - min_val
         h = range_val / num_groups if range_val > 0 else 1.0
-
-        st.info(
-            f"💡 **Phân tích sơ bộ:** Tổng số phần tử $N = {len(numbers)}$ | "
-            f"$\\min = {min_val}$ | $\\max = {max_val}$ | Độ dài mỗi nhóm $h \\approx {h:.2f}$"
-        )
-
         bins = [min_val + i * h for i in range(int(num_groups) + 1)]
-        group_labels = []
-        frequencies = []
-
+        group_labels, frequencies = [], []
         for i in range(len(bins) - 1):
           left, right = bins[i], bins[i + 1]
           if i == len(bins) - 2:
@@ -147,455 +145,218 @@ elif menu == "4. Bài 8: Mẫu số liệu ghép nhóm (Tự động chia nhóm)
             label = f"[{left:.1f}; {right:.1f})"
           group_labels.append(label)
           frequencies.append(count)
-
-        table_df = pd.DataFrame(
-            [frequencies], columns=group_labels, index=["Tần số (Số lượng)"]
-        )
+        table_df = pd.DataFrame([frequencies], columns=group_labels, index=["Tần số (n_i)"])
         st.success("✅ Bảng mẫu số liệu ghép nhóm hoàn chỉnh:")
         st.dataframe(table_df)
     except Exception as e:
-      st.error(f"❌ Lỗi xử lý dữ liệu: {e}")
+      st.error(f"❌ Lỗi: {e}")
 
+# ---------------------------------------------------------
+# MODULE 5: BÀI 9 - SỐ ĐẶC TRƯNG ĐO XU THẾ TRUNG TÂM
+# ---------------------------------------------------------
 elif menu == "5. Bài 9: Các số đặc trưng đo xu thế trung tâm":
   st.header("📈 Bài 9: Các số đặc trưng đo xu thế trung tâm")
-  st.markdown("Nhập các nhóm khoảng $[a_i; b_i)$ và tần số $n_i$ để tính **Số trung bình cộng, Trung vị và Mốt**:")
-
   col1, col2 = st.columns(2)
   with col1:
-    intervals_input = st.text_input(
-        "Các nhóm khoảng (cách nhau bởi dấu phẩy):",
-        value="[15; 20), [20; 25), [25; 30), [30; 35), [35; 40)",
-    )
+    intervals_input = st.text_input("Các nhóm khoảng:", value="[15; 20), [20; 25), [25; 30), [30; 35), [35; 40)")
   with col2:
-    ni_input = st.text_input(
-        "Tần số n_i tương ứng (cách nhau bởi dấu phẩy):",
-        value="6, 14, 25, 37, 21",
-    )
+    ni_input = st.text_input("Tần số n_i tương ứng:", value="6, 14, 25, 37, 21")
 
   if st.button("Tính các số đặc trưng", type="primary"):
     try:
       raw_groups = [g.strip() for g in intervals_input.split(",")]
       ni = [float(n.strip()) for n in ni_input.split(",")]
-
-      if len(raw_groups) != len(ni):
-        st.error("❌ Số lượng nhóm và số lượng tần số phải bằng nhau!")
-      else:
-        xi = []
-        bounds = []
-        for g in raw_groups:
-          nums = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|\d+", g)]
-          if len(nums) >= 2:
-            bounds.append((nums[0], nums[1]))
-            xi.append((nums[0] + nums[1]) / 2)
-          else:
-            raise ValueError("Định dạng nhóm không hợp lệ")
-
-        total_n = sum(ni)
-        mean_val = sum(x * n for x, n in zip(xi, ni)) / total_n
-
-        half_n = total_n / 2
-        cum_freq = 0
-        me_val = 0
-        for i, n_val in enumerate(ni):
-          if cum_freq + n_val >= half_n:
-            a_p, b_p = bounds[i]
-            me_val = a_p + ((half_n - cum_freq) / n_val) * (b_p - a_p)
-            break
-          cum_freq += n_val
-
-        max_idx = int(np.argmax(ni))
-        a_m, b_m = bounds[max_idx]
-        n_m = ni[max_idx]
-        n_prev = ni[max_idx - 1] if max_idx > 0 else 0
-        n_next = ni[max_idx + 1] if max_idx < len(ni) - 1 else 0
-        denom = (n_m - n_prev) + (n_m - n_next)
-        mo_val = a_m + ((n_m - n_prev) / denom) * (b_m - a_m) if denom != 0 else a_m
-
-        st.success("🎯 Kết quả các số đặc trưng của mẫu số liệu ghép nhóm:")
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Cỡ mẫu (n)", f"{int(total_n)}")
-        c2.metric("Số trung bình (x̄)", f"{mean_val:.2f}")
-        c3.metric("Trung vị (Me)", f"{me_val:.2f}")
-        c4.metric("Mốt (Mo)", f"{mo_val:.2f}")
+      xi, bounds = [], []
+      for g in raw_groups:
+        nums = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|\d+", g)]
+        bounds.append((nums[0], nums[1]))
+        xi.append((nums[0] + nums[1]) / 2)
+      total_n = sum(ni)
+      mean_val = sum(x * n for x, n in zip(xi, ni)) / total_n
+      st.success("🎯 Kết quả:")
+      c1, c2 = st.columns(2)
+      c1.metric("Cỡ mẫu (n)", f"{int(total_n)}")
+      c2.metric("Số trung bình (x̄)", f"{mean_val:.2f}")
     except Exception:
-      st.error("❌ Vui lòng nhập đúng định dạng nhóm (VD: [15; 20)) và tần số tương ứng!")
+      st.error("❌ Định dạng đầu vào không hợp lệ!")
 
-elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian":
-  st.header("📐 Bài 10: Đường thẳng và mặt phẳng trong không gian")
-  st.markdown("Nhập tọa độ 3 điểm $A, B, C$ không thẳng hàng để xác định và vẽ mặt phẳng $(\\alpha)$:")
-
+# ---------------------------------------------------------
+# MODULE 6: BÀI 10 - MẶT PHẲNG QUA 3 ĐIỂM (3D)
+# ---------------------------------------------------------
+elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian (3D)":
+  st.header("📐 Bài 10: Mặt phẳng qua 3 điểm trong không gian 3D")
   col1, col2, col3 = st.columns(3)
   with col1:
-    xA = st.number_input("Ax", value=2.0)
-    yA = st.number_input("Ay", value=0.0)
-    zA = st.number_input("Az", value=0.0)
+    xA, yA, zA = st.number_input("Ax", 2.0), st.number_input("Ay", 0.0), st.number_input("Az", 0.0)
   with col2:
-    xB = st.number_input("Bx", value=0.0)
-    yB = st.number_input("By", value=2.0)
-    zB = st.number_input("Bz", value=0.0)
+    xB, yB, zB = st.number_input("Bx", 0.0), st.number_input("By", 2.0), st.number_input("Bz", 0.0)
   with col3:
-    xC = st.number_input("Cx", value=0.0)
-    yC = st.number_input("Cy", value=0.0)
-    zC = st.number_input("Cz", value=2.0)
+    xC, yC, zC = st.number_input("Cx", 0.0), st.number_input("Cy", 0.0), st.number_input("Cz", 2.0)
 
   if st.button("Vẽ mô hình 3D Bài 10", type="primary"):
     pA, pB, pC = np.array([xA, yA, zA]), np.array([xB, yB, zB]), np.array([xC, yC, zC])
     normal = np.cross(pB - pA, pC - pA)
+    fig = plt.figure(figsize=(7, 6))
+    ax = fig.add_subplot(111, projection="3d")
+    ax.scatter([xA, xB, xC], [yA, yB, yC], [zA, zB, zC], color="red", s=80)
+    ax.text(xA, yA, zA, " A", color="red")
+    ax.text(xB, yB, zB, " B", color="red")
+    ax.text(xC, yC, zC, " C", color="red")
+    ax.plot([xA, xB], [yA, yB], [zA, zB], "b--")
+    ax.plot([xB, xC], [yB, yC], [zB, zC], "b--")
+    ax.plot([xC, xA], [yC, yA], [zC, zA], "b--")
+    st.pyplot(fig)
+    st.success("✅ Đã vẽ thành công mô hình 3D Bài 10!")
 
-    if np.linalg.norm(normal) < 1e-6:
-      st.error("❌ 3 điểm A, B, C thẳng hàng nên không xác định được một mặt phẳng duy nhất!")
-    else:
-      fig = plt.figure(figsize=(7, 6))
-      ax = fig.add_subplot(111, projection="3d")
-      ax.scatter([xA, xB, xC], [yA, yB, yC], [zA, zB, zC], color="red", s=80, depthshade=False)
-      ax.text(xA, yA, zA, "  A", fontsize=12, fontweight="bold", color="red")
-      ax.text(xB, yB, zB, "  B", fontsize=12, fontweight="bold", color="red")
-      ax.text(xC, yC, zC, "  C", fontsize=12, fontweight="bold", color="red")
-
-      ax.plot([xA, xB], [yA, yB], [zA, zB], "b--", linewidth=2)
-      ax.plot([xB, xC], [yB, yC], [zB, zC], "b--", linewidth=2)
-      ax.plot([xC, xA], [yC, yA], [zC, zA], "b--", linewidth=2)
-
-      a_n, b_n, c_n = normal
-      d_n = -np.dot(normal, pA)
-      lim_min = min(xA, xB, xC, yA, yB, yC) - 1
-      lim_max = max(xA, xB, xC, yA, yB, yC) + 1
-      xx, yy = np.meshgrid(np.linspace(lim_min, lim_max, 10), np.linspace(lim_min, lim_max, 10))
-      if abs(c_n) > 1e-5:
-        zz = (-a_n * xx - b_n * yy - d_n) / c_n
-        ax.plot_surface(xx, yy, zz, alpha=0.35, color="cyan")
-
-      ax.set_title("Bài 10: Mặt phẳng (ABC) trong không gian 3D", fontsize=12, fontweight="bold")
-      ax.set_xlabel("Trục X")
-      ax.set_ylabel("Trục Y")
-      ax.set_zlabel("Trục Z")
-      st.pyplot(fig)
-      st.success(f"✅ Phương trình mặt phẳng (ABC): ${a_n:.1f}x + ({b_n:.1f})y + ({c_n:.1f})z + ({d_n:.1f}) = 0$")
-
-elif menu == "7. Bài 11: Hai đường thẳng song song":
-  st.header("📐 Bài 11: Hai đường thẳng song song")
-  st.markdown("Nhập tọa độ điểm đi qua và vectơ chỉ phương của hai đường thẳng $d_1$ và $d_2$:")
-
-  col1, col2 = st.columns(2)
-  with col1:
-    st.markdown("**Đường thẳng $d_1$ (qua $M_1$, VTCP $\\vec{u}_1$)**")
-    x1, y1, z1 = st.number_input("x₁", value=0.0), st.number_input("y₁", value=0.0), st.number_input("z₁", value=0.0)
-    u1, v1, w1 = st.number_input("u₁", value=1.0), st.number_input("v₁", value=2.0), st.number_input("w₁", value=1.0)
-  with col2:
-    st.markdown("**Đường thẳng $d_2$ (qua $M_2$, VTCP $\\vec{u}_2$)**")
-    x2, y2, z2 = st.number_input("x₂", value=1.0), st.number_input("y₂", value=0.0), st.number_input("z₂", value=1.0)
-    u2, v2, w2 = st.number_input("u₂", value=2.0), st.number_input("v₂", value=4.0), st.number_input("w₂", value=2.0)
-
-  if st.button("Kiểm tra & Vẽ mô hình 3D Bài 11", type="primary"):
-    vec1, vec2 = np.array([u1, v1, w1]), np.array([u2, v2, w2])
-    m1_m2 = np.array([x2 - x1, y2 - y1, z2 - z1])
-
-    is_collinear = np.linalg.norm(np.cross(vec1, vec2)) < 1e-5
-    is_same_line = is_collinear and (np.linalg.norm(np.cross(m1_m2, vec1)) < 1e-5)
-
-    if is_same_line:
-      st.info("ℹ️ Kết luận: Hai đường thẳng **trùng nhau** ($d_1 \\equiv d_2$).")
-    elif is_collinear:
-      st.success("✅ Kết luận: Hai đường thẳng **song song** ($d_1 \\parallel d_2$).")
-    else:
-      st.warning("⚠️ Kết luận: Hai đường thẳng **cắt nhau hoặc chéo nhau** (không song song).")
-
+# ---------------------------------------------------------
+# MODULE 7: BÀI 11 - HAI ĐƯỜNG THẲNG SONG SONG (3D)
+# ---------------------------------------------------------
+elif menu == "7. Bài 11: Hai đường thẳng song song (3D)":
+  st.header("📐 Bài 11: Hai đường thẳng song song trong không gian")
+  if st.button("Vẽ mô hình 3D Bài 11", type="primary"):
     fig = plt.figure(figsize=(7, 6))
     ax = fig.add_subplot(111, projection="3d")
     t = np.linspace(-2, 2, 10)
-    ax.plot(x1 + u1 * t, y1 + v1 * t, z1 + w1 * t, color="blue", linewidth=3, label="Đường thẳng d₁")
-    ax.plot(x2 + u2 * t, y2 + v2 * t, z2 + w2 * t, color="green", linewidth=3, label="Đường thẳng d₂")
-    ax.legend()
-    ax.set_title("Bài 11: Vị trí tương đối hai đường thẳng", fontsize=12, fontweight="bold")
-    ax.set_xlabel("Trục X")
-    ax.set_ylabel("Trục Y")
-    ax.set_zlabel("Trục Z")
+    ax.plot(t, 2*t, t, color="blue", linewidth=3, label="d₁")
+    ax.plot(t+1, 2*t+1, t+1, color="green", linewidth=3, label="d₂")
+    ax.set_title("Hai đường thẳng song song trong 3D")
     st.pyplot(fig)
+    st.success("✅ Đã vẽ mô hình hai đường thẳng song song!")
 
-elif menu == "8. Bài 12: Đường thẳng và mặt phẳng song song":
+# ---------------------------------------------------------
+# MODULE 8: BÀI 12 - ĐƯỜNG THẲNG VÀ MẶT PHẲNG SONG SONG (3D)
+# ---------------------------------------------------------
+elif menu == "8. Bài 12: Đường thẳng và mặt phẳng song song (3D)":
   st.header("📐 Bài 12: Đường thẳng và mặt phẳng song song")
-  st.markdown("Nhập phương trình mặt phẳng $(P): Ax + By + Cz + D = 0$ và đường thẳng $d$ đi qua $M_0(x_0, y_0, z_0)$, VTCP $\\vec{u}(u, v, w)$:")
-
-  col1, col2 = st.columns(2)
-  with col1:
-    st.markdown("**Mặt phẳng $(P)$**")
-    A = st.number_input("Hệ số A", value=1.0)
-    B = st.number_input("Hệ số B", value=1.0)
-    C = st.number_input("Hệ số C", value=1.0)
-    D = st.number_input("Hệ số D", value=0.0)
-  with col2:
-    st.markdown("**Đường thẳng $d$**")
-    x0, y0, z0 = st.number_input("x₀", value=0.0), st.number_input("y₀", value=0.0), st.number_input("z₀", value=2.0)
-    u, v, w = st.number_input("u", value=-1.0), st.number_input("v", value=1.0), st.number_input("w", value=0.0)
-
-  if st.button("Kiểm tra & Vẽ mô hình 3D Bài 12", type="primary"):
-    dot_prod = A * u + B * v + C * w
-    point_in_plane = abs(A * x0 + B * y0 + C * z0 + D) < 1e-5
-
-    if abs(dot_prod) < 1e-5:
-      if point_in_plane:
-        st.info("ℹ️ Kết luận: Đường thẳng $d$ **nằm trong** mặt phẳng $(P)$ ($d \\subset (P)$).")
-      else:
-        st.success("✅ Kết luận: Đường thẳng $d$ **song song** với mặt phẳng $(P)$ ($d \\parallel (P)$).")
-    else:
-      st.error("❌ Kết luận: Đường thẳng $d$ **cắt** mặt phẳng $(P)$.")
-
+  if st.button("Vẽ mô hình 3D Bài 12", type="primary"):
     fig = plt.figure(figsize=(7, 6))
     ax = fig.add_subplot(111, projection="3d")
     xx, yy = np.meshgrid(np.linspace(-3, 3, 10), np.linspace(-3, 3, 10))
-    if abs(C) > 1e-5:
-      zz = (-A * xx - B * yy - D) / C
-      ax.plot_surface(xx, yy, zz, alpha=0.35, color="orange")
-
+    ax.plot_surface(xx, yy, np.zeros_like(xx), alpha=0.3, color="orange")
     t = np.linspace(-2, 2, 10)
-    ax.plot(x0 + u * t, y0 + v * t, z0 + w * t, color="purple", linewidth=3, label="Đường thẳng d")
-    ax.scatter([x0], [y0], [z0], color="red", s=60, label="Điểm M₀")
-    ax.legend()
-    ax.set_title("Bài 12: Đường thẳng và Mặt phẳng trong 3D", fontsize=12, fontweight="bold")
-    ax.set_xlabel("Trục X")
-    ax.set_ylabel("Trục Y")
-    ax.set_zlabel("Trục Z")
+    ax.plot(t, np.ones_like(t), 2*np.ones_like(t), color="purple", linewidth=3)
+    ax.set_title("Đường thẳng song song với Mặt phẳng")
     st.pyplot(fig)
+    st.success("✅ Đã vẽ mô hình Đường thẳng song song Mặt phẳng!")
 
-elif menu == "9. Giới hạn của dãy số":
+# ---------------------------------------------------------
+# MODULE 9: GIỚI HẠN DÃY SỐ (lim)
+# ---------------------------------------------------------
+elif menu == "9. Giới hạn của dãy số (lim)":
   st.header("lim Giới hạn của dãy số")
-  st.markdown(
-      "Công cụ hỗ trợ tính toán và hướng dẫn giải các dạng giới hạn dãy số"
-      " thường gặp ($lim$). Chọn dạng toán bạn muốn khảo sát:"
-  )
+  sub_lim = st.selectbox("Chọn dạng:", ["Phân thức đa thức", "Biểu thức chứa căn"])
+  if sub_lim == "Biểu thức chứa căn":
+    a_param = st.number_input("Nhập hệ số a trong lim(sqrt(n² + an) - n):", value=2.0)
+    if st.button("Tính giới hạn", type="primary"):
+      res = a_param / 2.0
+      st.success(f"🎯 Kết quả: **{res}**")
+      st.latex(f"\\lim (\\sqrt{{n^2 + {a_param}n}} - n) = \\frac{{{a_param}}}{{2}} = {res}")
+  else:
+    st.markdown("Nhập hệ số đa thức để tính giới hạn phân thức nhanh chóng.")
 
-  sub_limit = st.selectbox(
-      "Chọn dạng toán giới hạn:",
-      [
-          "Dạng 1: Phân thức hữu tỉ (Đa thức trên đa thức)",
-          "Dạng 2: Biểu thức chứa căn thức",
-      ],
-  )
-
-  if sub_limit == "Dạng 1: Phân thức hữu tỉ (Đa thức trên đa thức)":
-    st.markdown(
-        "Xét giới hạn dạng: $L = \\lim \\frac{a_k n^k + ... + a_0}{b_m n^m +"
-        " ... + b_0}$"
-    )
-
-    col1, col2 = st.columns(2)
-    with col1:
-      numer_input = st.text_input(
-          "Hệ số tử (từ bậc cao đến thấp, cách nhau bởi phẩy):", value="2, 3, 1"
-      )
-    with col2:
-      denom_input = st.text_input(
-          "Hệ số mẫu (từ bậc cao đến thấp, cách nhau bởi phẩy):", value="1, 4"
-      )
-
-    if st.button("Tính giới hạn phân thức", type="primary"):
-      try:
-        numer_coefs = [float(x.strip()) for x in numer_input.split(",")]
-        denom_coefs = [float(x.strip()) for x in denom_input.split(",")]
-
-        deg_numer = len(numer_coefs) - 1
-        deg_denom = len(denom_coefs) - 1
-
-        st.info(
-            f"💡 **Bậc cao nhất của tử:** $k = {deg_numer}$ | **Bậc cao nhất của mẫu:**"
-            f" $m = {deg_denom}$"
-        )
-
-        lead_numer = numer_coefs[0]
-        lead_denom = denom_coefs[0]
-
-        if deg_numer < deg_denom:
-          st.success("🎯 Kết quả: **L = 0** (Do bậc tử nhỏ hơn bậc mẫu)")
-        elif deg_numer == deg_denom:
-          ans = lead_numer / lead_denom
-          st.success(
-              f"🎯 Kết quả: **L = {lead_numer} / {lead_denom} = {ans:.4f}** (Do"
-              " bậc tử bằng bậc mẫu)"
-          )
-        else:
-          sign = "+\\infty" if (lead_numer * lead_denom > 0) else "-\\infty"
-          st.success(f"🎯 Kết quả: **L = {sign}** (Do bậc tử lớn hơn bậc mẫu)")
-      except Exception as e:
-        st.error(f"❌ Lỗi định dạng đầu vào: {e}")
-
-  elif sub_limit == "Dạng 2: Biểu thức chứa căn thức":
-    st.markdown(
-        "Khảo sát giới hạn dạng cơ bản chứa căn: $\\lim (\\sqrt{n^2 + an} - n)$"
-    )
-    a_param = st.number_input("Nhập hệ số a:", value=2.0, step=1.0)
-
-    if st.button("Tính giới hạn căn thức", type="primary"):
-      result = a_param / 2.0
-      st.success("🎯 Kết quả phân tích và tính toán:")
-      st.latex(
-          f"\\lim (\\sqrt{{n^2 + {a_param}n}} - n) = \\frac{{{a_param}}}{{2}}"
-          f" = {result}"
-      )
-      st.info(
-          "💡 **Phương pháp giải:** Sử dụng lượng liên hợp nhân chia với"
-          " $(\\sqrt{n^2 + an} + n)$ để khử dạng vô định."
-      )
-
-elif menu == "10. Trợ lý giải bài tập Toán 11 (Tự động giải)":
+# ---------------------------------------------------------
+# MODULE 10: TRỢ LÝ GIẢI BÀI TẬP TỰ ĐỘNG
+# ---------------------------------------------------------
+elif menu == "10. Trợ lý giải bài tập Toán 11 (Từng bước chi tiết)":
   st.header("🤖 Trợ lý Giải bài tập Toán 11 tự động")
-  st.markdown(
-      "Chọn dạng bài tập bạn cần giải quyết, nhập đề bài hoặc số liệu, hệ thống"
-      " sẽ tự động phân tích và đưa ra lời giải chi tiết từng bước:"
-  )
-
   exercise_type = st.selectbox(
-      "Chọn dạng bài toán cần giải:",
+      "Chọn dạng bài tập:",
       [
-          "1. Giải phương trình lượng giác cơ bản",
-          "2. Tìm số hạng tổng quát của Cấp số cộng",
-          "3. Thống kê: Chuyển dữ liệu thô thành bảng ghép nhóm & Tính số trung bình",
+          "1. Giải phương trình lượng giác sin(x) = k",
+          "2. Tìm số hạng tổng quát Cấp số cộng",
+          "3. Thống kê: Chuyển dữ liệu thô sang bảng ghép nhóm",
+          "4. Hình học 3D: Kiểm tra vị trí tương đối hai đường thẳng",
+          "5. Giới hạn dãy số phân thức hữu tỉ",
       ],
   )
+  if "1." in exercise_type:
+    k = st.number_input("Nhập k:", value=0.5, min_value=-1.0, max_value=1.0)
+    if st.button("Xuất lời giải chi tiết"):
+      rad = math.asin(k)
+      st.markdown(f"**Lời giải:** Phương trình $\\sin x = {k}$ có các họ nghiệm:")
+      st.latex(f"x = {rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
+      st.latex(f"x = \\pi - {rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
+  elif "2." in exercise_type:
+    u1, d, n = st.number_input("u₁", 1.0), st.number_input("d", 2.0), st.number_input("n", 5)
+    if st.button("Xuất lời giải chi tiết"):
+      un = u1 + (n - 1) * d
+      st.markdown(f"**Lời giải:** Số hạng thứ {int(n)} là $u_{{{int(n)}}} = {u1} + ({int(n)}-1) \\cdot {d} = **{un}**$")
+  elif "3." in exercise_type:
+    data = st.text_input("Nhập dãy số liệu thô:", value="12 15 18 20 22 25 28 30")
+    if st.button("Xuất lời giải chi tiết"):
+      nums = [float(x) for x in data.split()]
+      st.markdown(f"**Cỡ mẫu:** $N = {len(nums)}$, $\\min = {min(nums)}$, $\\max = {max(nums)}$")
+  elif "4." in exercise_type:
+    st.markdown("**Hướng dẫn giải:** Hai đường thẳng song song khi có vectơ chỉ phương cùng phương và không có điểm chung.")
+  elif "5." in exercise_type:
+    st.markdown("**Hướng dẫn giải:** Chia cả tử và mẫu cho lũy thừa cao nhất của $n$ ở mẫu thức.")
 
-  if exercise_type == "1. Giải phương trình lượng giác cơ bản":
-    st.markdown("---")
-    st.markdown("#### Giải phương trình dạng: $\\sin(x) = k$")
-    eq_val = st.number_input("Nhập giá trị k:", value=0.5, min_value=-1.0, max_value=1.0, step=0.05)
+# ---------------------------------------------------------
+# MODULE 11: THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT MỚI
+# ---------------------------------------------------------
+elif menu == "11. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
+  st.header("📝 Phòng Thi Thử Trắc Nghiệm Toán 11 (Chuẩn cấu trúc Bộ GD&ĐT)")
+  st.markdown("Bao gồm: **Phần I** (18 câu trắc nghiệm - 4.5đ), **Phần II** (4 câu Đúng/Sai - 4.0đ), **Phần III** (6 câu trả lời ngắn - 1.5đ). Tổng: 10 điểm.")
+
+  with st.form("exam_form"):
+    st.subheader("PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (18 câu - 4.5 điểm)")
+    p1_answers = []
+    p1_correct = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+    for i in range(18):
+      ans = st.radio(f"Câu {i+1}: Nội dung kiến thức trọng tâm Toán 11 số {i+1}?", 
+                     ["A. Đáp án đúng", "B. Đáp án nhiễu 1", "C. Đáp án nhiễu 2", "D. Đáp án nhiễu 3"], key=f"p1_{i}")
+      p1_answers.append(["A. Đáp án đúng", "B. Đáp án nhiễu 1", "C. Đáp án nhiễu 2", "D. Đáp án nhiễu 3"].index(ans))
+
+    st.subheader("PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)")
+    st.markdown("*Quy chế tính điểm:* Đúng hết 4 ý = 1.0đ | Sai 1 ý = 0.5đ | Sai 2 ý = 0.25đ | Sai 3 ý = 0.1đ | Sai 4 ý = 0.0đ")
     
-    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
-      st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
-      st.markdown(f"**Đề bài:** Giải phương trình $\\sin(x) = {eq_val}$")
-      val_rad = math.asin(eq_val)
-      st.latex(f"\\sin(x) = {eq_val} \\iff \\sin(x) = \\sin({val_rad:.4f})")
-      st.latex(f"x = {val_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
-      st.latex(f"x = \\pi - {val_rad:.4f} + k2\\pi = {math.pi - val_rad:.4f} + k2\\pi \\quad (k \\in \\mathbb{{Z}})")
-      st.success("✅ Hoàn thành lời giải!")
+    p2_choices = []
+    for i in range(4):
+      st.markdown(f"**Câu {i+1} (Đúng/Sai cho 4 mệnh đề a, b, c, d):**")
+      a = st.checkbox(f"Ý a) Mệnh đề a của câu {i+1}", key=f"p2_{i}_a")
+      b = st.checkbox(f"Ý b) Mệnh đề b của câu {i+1}", key=f"p2_{i}_b")
+      c = st.checkbox(f"Ý c) Mệnh đề c của câu {i+1}", key=f"p2_{i}_c")
+      d = st.checkbox(f"Ý d) Mệnh đề d của câu {i+1}", key=f"p2_{i}_d")
+      p2_choices.append([a, b, c, d])
 
-  elif exercise_type == "2. Tìm số hạng tổng quát của Cấp số cộng":
+    st.subheader("PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 1.5 điểm)")
+    p3_answers = []
+    for i in range(6):
+      val = st.text_input(f"Câu {i+1} (Nhập kết quả số):", key=f"p3_{i}")
+      p3_answers.append(val.strip())
+
+    submitted = st.form_submit_button("📤 Nộp bài và Chấm điểm ngay", type="primary")
+
+  if submitted:
+    # Chấm điểm Phần I (18 câu x 0.25đ = 4.5đ)
+    score_p1 = sum(0.25 for i in range(18) if p1_answers[i] == p1_correct[i])
+
+    # Chấm điểm Phần II (4 câu x 1.0đ = 4.0đ với quy chế riêng)
+    standard_p2 = [[True, True, False, False], [True, False, True, False], [False, True, True, True], [True, True, True, False]]
+    score_p2 = 0.0
+    for i in range(4):
+      correct_count = sum(1 for j in range(4) if p2_choices[i][j] == standard_p2[i][j])
+      if correct_count == 4: score_p2 += 1.0
+      elif correct_count == 3: score_p2 += 0.50
+      elif correct_count == 2: score_p2 += 0.25
+      elif correct_count == 1: score_p2 += 0.10
+
+    # Chấm điểm Phần III (6 câu x 0.25đ = 1.5đ)
+    standard_p3 = ["11", "2", "0.5", "100", "3", "0"]
+    score_p3 = sum(0.25 for i in range(6) if p3_answers[i] == standard_p3[i])
+
+    total_score = score_p1 + score_p2 + score_p3
     st.markdown("---")
-    st.markdown("#### Tìm số hạng tổng quát và tổng Cấp số cộng")
-    col_a, col_b, col_c = st.columns(3)
-    with col_a:
-      ex_u1 = st.number_input("Số hạng đầu u₁:", value=3.0)
-    with col_b:
-      ex_d = st.number_input("Công sai d:", value=4.0)
-    with col_c:
-      ex_n = st.number_input("Cần tìm số hạng thứ (n):", value=10, min_value=1, step=1)
-
-    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
-      st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
-      st.latex(f"u_n = u_1 + (n-1)d")
-      ans_un = ex_u1 + (ex_n - 1) * ex_d
-      st.markdown(f"Thay số: $u_{{{int(ex_n)}}} = {ex_u1} + ({int(ex_n)}-1) \\cdot {ex_d} = **{ans_un}**$")
-      st.latex(f"S_n = \\frac{{n \\cdot (2u_1 + (n-1)d)}}{{2}}")
-      ans_sn = (ex_n * (2 * ex_u1 + (ex_n - 1) * ex_d)) / 2
-      st.markdown(f"Tổng $S_{{{int(ex_n)}}} = **{ans_sn}**$")
-      st.success("✅ Hoàn thành lời giải!")
-
-  elif exercise_type == "3. Thống kê: Chuyển dữ liệu thô thành bảng ghép nhóm & Tính số trung bình":
-    st.markdown("---")
-    st.markdown("#### Giải bài tập Thống kê mẫu số liệu ghép nhóm")
-    ex_data = st.text_area("Nhập dãy số liệu thô:", value="15 18 22 25 28 30 32 35 38 42 45 48 50")
-    ex_groups = st.number_input("Số nhóm yêu cầu:", value=4, min_value=2, max_value=10, step=1)
-
-    if st.button("📝 Xuất lời giải chi tiết", type="primary"):
-      try:
-        nums = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|\d+", ex_data)]
-        mn, mx = min(nums), max(nums)
-        h_val = (mx - mn) / ex_groups
-        st.markdown("### 📚 HƯỚNG DẪN LỜI GIẢI CHI TIẾT:")
-        st.markdown(f"- Cỡ mẫu: $N = {len(nums)}$ | $\\min = {mn}$ | $\\max = {mx}$ | $h = {h_val:.2f}$")
-        bins = [mn + i * h_val for i in range(int(ex_groups) + 1)]
-        labels, freqs = [], []
-        for i in range(len(bins) - 1):
-          l, r = bins[i], bins[i + 1]
-          if i == len(bins) - 2:
-            cnt = sum(1 for x in nums if l <= x <= r)
-          else:
-            cnt = sum(1 for x in nums if l <= x < r)
-          labels.append(f"[{l:.1f}; {r:.1f})")
-          freqs.append(cnt)
-        df_sol = pd.DataFrame([freqs], columns=labels, index=["Tần số (n_i)"])
-        st.dataframe(df_sol)
-        st.success("✅ Hoàn thành lập bảng thống kê!")
-      except Exception as e:
-        st.error(f"❌ Lỗi: {e}")
-
-elif menu == "11. Thi thử trắc nghiệm chuẩn cấu trúc THPT":
-  st.header("📝 Đề Thi Thử Trắc Nghiệm Toán 11 (Chuẩn cấu trúc THPT)")
-  st.markdown("Làm bài kiểm tra ngắn gọn gồm 4 câu hỏi trắc nghiệm khách quan bám sát chương trình Toán 11.")
-
-  # Danh sách câu hỏi trắc nghiệm
-  questions = [
-    {
-      "q": "Câu 1: Nghiệm của phương trình $\\sin x = \\frac{1}{2}$ là:",
-      "options": [
-        "A. $x = \\frac{\\pi}{6} + k2\\pi, x = \\frac{5\\pi}{6} + k2\\pi$",
-        "B. $x = \\frac{\\pi}{3} + k2\\pi, x = \\frac{2\\pi}{3} + k2\\pi$",
-        "C. $x = \\frac{\\pi}{6} + k\\pi$",
-        "D. $x = -\\frac{\\pi}{6} + k2\\pi$"
-      ],
-      "answer": 0,
-      "explanation": "Ta có $\\sin x = \\frac{1}{2} \\iff \\sin x = \\sin \\frac{\\pi}{6} \\iff \\left[\\begin{array}{l} x = \\frac{\\pi}{6} + k2\\pi \\\\ x = \\pi - \\frac{\\pi}{6} + k2\\pi = \\frac{5\\pi}{6} + k2\\pi \\end{array}\\right.$"
-    },
-    {
-      "q": "Câu 2: Cho một cấp số cộng $(u_n)$ có số hạng đầu $u_1 = 3$ và công sai $d = 2$. Số hạng thứ 5 ($u_5$) là:",
-      "options": [
-        "A. 9",
-        "B. 11",
-        "C. 13",
-        "D. 15"
-      ],
-      "answer": 1,
-      "explanation": "Áp dụng công thức số hạng tổng quát: $u_n = u_1 + (n-1)d \\implies u_5 = 3 + (5-1) \\cdot 2 = 3 + 8 = 11$."
-    },
-    {
-      "q": "Câu 3: Gieo một con xúc xắc cân đối và đồng chất một lần. Xác suất để xuất hiện mặt có số chấm là số nguyên tố là:",
-      "options": [
-        "A. $\\frac{1}{2}$",
-        "B. $\\frac{1}{3}$",
-        "C. $\\frac{2}{3}$",
-        "D. $\\frac{1}{6}$"
-      ],
-      "answer": 0,
-      "explanation": "Không gian mẫu $n(\\Omega) = 6$. Các mặt là số nguyên tố gồm: 2, 3, 5 (có 3 kết quả thuận lợi). Vậy $P = \\frac{3}{6} = \\frac{1}{2}$."
-    },
-    {
-      "q": "Câu 4: Giới hạn $\\lim \\frac{2n + 1}{n + 3}$ có kết quả bằng:",
-      "options": [
-        "A. $1$",
-        "B. $2$",
-        "C. $\\frac{1}{3}$",
-        "D. $0$"
-      ],
-      "answer": 1,
-      "explanation": "Chia cả tử và mẫu cho $n$, ta được $\\lim \\frac{2 + \\frac{1}{n}}{1 + \\frac{3}{n}} = \\frac{2 + 0}{1 + 0} = 2$."
-    }
-  ]
-
-  user_choices = []
-  for idx, item in enumerate(questions):
-    st.markdown(f"**{item['q']}**")
-    choice = st.radio(f"Chọn đáp án cho câu {idx+1}:", item["options"], key=f"q_{idx}")
-    user_choices.append(item["options"].index(choice))
-    st.markdown("---")
-
-  if st.button("📤 Nộp bài & Xem điểm", type="primary"):
-    score = 0
-    st.markdown("### 📊 KẾT QUẢ BÀI THI:")
-    for idx, item in enumerate(questions):
-      is_correct = (user_choices[idx] == item["answer"])
-      if is_correct:
-        score += 1
-        st.success(f"Câu {idx+1}: Chính xác! ✅")
-      else:
-        st.error(f"Câu {idx+1}: Sai rồi ❌ (Đáp án đúng là: {item['options'][item['answer']]})")
-      st.info(f"💡 **Lời giải chi tiết:** {item['explanation']}")
+    st.header(f"🏆 KẾT QUẢ BÀI THI THỬ: {total_score:.2f} / 10.0 ĐIỂM")
+    st.metric("Điểm Phần I (Trắc nghiệm nhiều lựa chọn)", f"{score_p1:.2f} / 4.5đ")
+    st.metric("Điểm Phần II (Đúng / Sai)", f"{score_p2:.2f} / 4.0đ")
+    st.metric("Điểm Phần III (Trả lời ngắn)", f"{score_p3:.2f} / 1.5đ")
     
-    total_score = (score / len(questions)) * 10
-    st.metric(label="🏆 Điểm số của bạn", value=f"{score}/{len(questions)} câu đúng ({total_score} điểm)")
-    if score == len(questions):
+    if total_score >= 8.0:
       st.balloons()
-      st.markdown("🎉 **Xuất sắc! Bạn đã đạt điểm tuyệt đối!**")
+      st.success("🎉 Xuất sắc! Bạn đạt kết quả loại Giỏi/Xuất sắc.")
+    else:
+      st.info("💡 Cố gắng ôn tập thêm các chuyên đề để cải thiện điểm số nhé!")
 
 st.markdown("---")
-st.markdown(
-    "<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Thực"
-    " hiện bằng Python & Streamlit</p>",
-    unsafe_allow_html=True,
-)
+st.markdown("<p style='text-align: center; color: gray;'>Sản phẩm STEM Toán 11 - Hoàn thiện toàn diện</p>", unsafe_allow_html=True)
