@@ -17,7 +17,7 @@ st.markdown(
 )
 st.markdown("---")
 
-# Menu điều hướng chính trên thanh sidebar (Đã lược bỏ Bài 11, 12 và Trợ lý giải bài tập)
+# Menu điều hướng chính trên thanh sidebar
 st.sidebar.header("📋 Danh mục chức năng")
 menu = st.sidebar.selectbox(
     "Chọn nội dung bài học:",
@@ -223,24 +223,56 @@ elif menu == "6. Bài 10: Đường thẳng và mặt phẳng trong không gian 
     st.success("✅ Đã vẽ mô hình 3D Bài 10!")
 
 # ---------------------------------------------------------
-# 7. GIỚI HẠN DÃY SỐ (lim)
+# 7. GIỚI HẠN DÃY SỐ (lim) - ĐÃ CẬP NHẬT HIỂN THỊ CÔNG THỨC + KẾT QUẢ
 # ---------------------------------------------------------
 elif menu == "7. Giới hạn của dãy số (lim)":
   st.header("lim Giới hạn của dãy số")
   sub_lim = st.selectbox(
       "Chọn dạng toán:", ["Phân thức đa thức", "Biểu thức chứa căn"], key="m7_sub"
   )
+
   if sub_lim == "Biểu thức chứa căn":
-    a_param = st.number_input("Nhập hệ số a:", value=2.0, key="m7_a")
+    a_param = st.number_input(
+        "Nhập hệ số a trong lim(sqrt(n² + an) - n):", value=2.0, key="m7_a"
+    )
     if st.button("Tính giới hạn", type="primary", key="m7_btn"):
       res = a_param / 2.0
-      st.success(f"🎯 Kết quả: **{res}**")
+      st.success("🎯 Kết quả tính toán:")
+      st.latex(
+          f"\\lim \\left(\\sqrt{{n^2 + {a_param}n}} - n\\right) ="
+          f" \\frac{{{a_param}}}{{2}} = {res}"
+      )
   else:
-    st.markdown("Nhập hệ số đa thức để tính giới hạn phân thức.")
+    st.markdown(
+        "Nhập hệ số đa thức của tử và mẫu (từ bậc cao đến thấp, cách nhau bởi"
+        " dấu phẩy):"
+    )
     num_str = st.text_input("Tử thức:", value="2, 3, 1", key="m7_num")
     den_str = st.text_input("Mẫu thức:", value="1, 4", key="m7_den")
+
     if st.button("Tính giới hạn", type="primary", key="m7_btn2"):
-      st.success("🎯 Kết quả tính toán phân thức thành công!")
+      try:
+        nums = [float(x.strip()) for x in num_str.split(",")]
+        dens = [float(x.strip()) for x in den_str.split(",")]
+        deg_num = len(nums) - 1
+        deg_den = len(dens) - 1
+
+        st.markdown("---")
+        st.markdown(f"**Phân tích bậc:** Bậc tử $k = {deg_num}$ | Bậc mẫu $m = {deg_den}$")
+
+        if deg_num < deg_den:
+          st.success("🎯 Kết quả: **L = 0**")
+          st.latex("L = \\lim \\frac{\\text{Tử}}{\\text{Mẫu}} = 0 \\quad (\\text{do } k < m)")
+        elif deg_num == deg_den:
+          ans = nums[0] / dens[0]
+          st.success(f"🎯 Kết quả: **L = {ans:.4f}**")
+          st.latex(f"L = \\frac{{{nums[0]}}}{{{{dens[0]}}}} = {ans:.4f} \\quad (\\text{{do } k = m})")
+        else:
+          sign = "+\\infty" if (nums[0] * dens[0] > 0) else "-\\infty"
+          st.success(f"🎯 Kết quả: **L = {sign}**")
+          st.latex(f"L = {sign} \\quad (\\text{{do } k > m})")
+      except Exception as e:
+        st.error(f"❌ Lỗi định dạng đầu vào: {e}")
 
 # ---------------------------------------------------------
 # 8. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT
@@ -555,7 +587,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         if p1_answers[i] == p1_questions[i]["ans"]
     )
 
-    # Chấm điểm Phần II (Chuẩn quy chế thi mới)
+    # Chấm điểm Phần II
     score_p2 = 0.0
     for i in range(4):
       correct_count = sum(
