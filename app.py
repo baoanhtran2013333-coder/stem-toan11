@@ -268,7 +268,7 @@ elif menu == "7. Giới hạn của dãy số (lim)":
         elif deg_num == deg_den:
           ans = nums[0] / dens[0]
           st.success(f"🎯 Kết quả: L = {ans:.4f}")
-          st.latex(f"L = \\frac{{{nums[0]}}}{{{dens[0]}}} = {ans:.4f}")
+          st.latex(f"L = \frac{{{nums[0]}}}{{{dens[0]}}} = {ans:.4f}")
         else:
           sign = "+\\infty" if (nums[0] * dens[0] > 0) else "-\\infty"
           st.success(f"🎯 Kết quả: L = {sign}")
@@ -277,19 +277,88 @@ elif menu == "7. Giới hạn của dãy số (lim)":
         st.error(f"❌ Lỗi định dạng đầu vào: {e}")
 
 # ---------------------------------------------------------
-# 8. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT (CÓ ĐÁP ÁN + PHÂN TÍCH CHI TIẾT)
+# 8. THI THỬ TRẮC NGHIỆM CHUẨN CẤU TRÚC THPT (CÓ TÍNH NĂNG RESET)
 # ---------------------------------------------------------
 elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
   st.header("📝 Phòng Thi Thử Trắc Nghiệm Toán 11")
-  st.markdown(
-      "Đề thi chuẩn cấu trúc Bộ GD&ĐT gồm 3 phần: **Phần I** (18 câu trắc nghiệm"
-      " nhiều lựa chọn - 4.5đ), **Phần II** (4 câu Đúng/Sai - 4.0đ), **Phần"
-      " III** (6 câu trả lời ngắn - 1.5đ)."
-  )
 
-  with st.form("exam_form"):
-    st.subheader(
-        "PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (18 câu - 4.5 điểm)"
+  # Khởi tạo trạng thái nộp bài nếu chưa có
+  if "submitted" not in st.session_state:
+    st.session_state.submitted = False
+
+  # Nếu ĐÃ NỘP BÀI: Hiển thị kết quả, đáp án chi tiết và nút "Làm bài mới (Reset)"
+  if st.session_state.submitted:
+    st.success("🎉 Bài làm của bạn đã được chấm điểm thành công!")
+
+    # Lấy lại dữ liệu kết quả từ session_state để hiển thị
+    total_score = st.session_state.total_score
+    score_p1 = st.session_state.score_p1
+    score_p2 = st.session_state.score_p2
+    score_p3 = st.session_state.score_p3
+
+    st.header(f"🏆 TỔNG ĐIỂM CỦA BẠN: {total_score:.2f} / 10.0 ĐIỂM")
+    st.metric("Điểm Phần I", f"{score_p1:.2f} / 4.5đ")
+    st.metric("Điểm Phần II", f"{score_p2:.2f} / 4.0đ")
+    st.metric("Điểm Phần III", f"{score_p3:.2f} / 1.5đ")
+    st.markdown("---")
+
+    # Hiển thị chi tiết đáp án từng phần
+    st.subheader("📌 PHẦN I: Trắc nghiệm nhiều lựa chọn (Chi tiết)")
+    for i in range(18):
+      q = st.session_state.p1_questions[i]
+      user_ans = st.session_state.p1_answers[i]
+      correct_ans = q["ans"]
+      if user_ans == correct_ans:
+        st.success(f"**{q['q']}** 👉 Bạn chọn: **{q['options'][user_ans]}** (Chính xác ✅)")
+      else:
+        st.error(
+            f"**{q['q']}** 👉 Bạn chọn: **{q['options'][user_ans]}** | Đáp án"
+            f" đúng: **{q['options'][correct_ans]}** ❌"
+        )
+      st.info(f"💡 **Lời giải:** {q['explain']}")
+
+    st.subheader("📌 PHẦN II: Trắc nghiệm Đúng / Sai (Chi tiết)")
+    for i in range(4):
+      title, sub_list, sub_explains = st.session_state.p2_data[i]
+      p2_item_score = st.session_state.p2_item_scores[i]
+      st.markdown(f"**{title}** (Đạt {p2_item_score}đ / 1.0đ)")
+      for j in range(4):
+        u_val = st.session_state.p2_choices[i][j]
+        c_val = st.session_state.standard_p2[i][j]
+        status = "✅ Đúng" if u_val == c_val else "❌ Sai"
+        st.write(
+            f"- Ý {chr(97+j)}: Bạn chọn **{u_val}** (Đáp án chuẩn: **{c_val}**) -"
+            f" {status} | *Giải thích:* {sub_explains[j]}"
+        )
+
+    st.subheader("📌 PHẦN III: Trắc nghiệm trả lời ngắn (Chi tiết)")
+    for i in range(6):
+      u_val = st.session_state.p3_answers[i]
+      c_val = st.session_state.standard_p3[i]
+      if u_val == c_val:
+        st.success(
+            f"**{st.session_state.p3_questions[i]}** 👉 Bạn trả lời:"
+            f" **{u_val}** (Chính xác ✅)"
+        )
+      else:
+        st.error(
+            f"**{st.session_state.p3_questions[i]}** 👉 Bạn trả lời:"
+            f" **{u_val}** | Đáp án chuẩn: **{c_val}** ❌"
+        )
+      st.info(f"💡 **Hướng dẫn giải:** {st.session_state.explain_p3[i]}")
+
+    st.markdown("---")
+    # NÚT RESET ĐỂ LÀM BÀI MỚI
+    if st.button("🔄 Làm bài mới (Reset)", type="primary", use_container_width=True):
+      st.session_state.submitted = False
+      st.rerun()
+
+  # NẾU CHƯA NỘP BÀI: Hiển thị form làm bài thi
+  else:
+    st.markdown(
+        "Đề thi chuẩn cấu trúc Bộ GD&ĐT gồm 3 phần: **Phần I** (18 câu trắc nghiệm"
+        " nhiều lựa chọn - 4.5đ), **Phần II** (4 câu Đúng/Sai - 4.0đ), **Phần"
+        " III** (6 câu trả lời ngắn - 1.5đ)."
     )
 
     p1_questions = [
@@ -517,19 +586,6 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         },
     ]
 
-    p1_answers = []
-    for idx, q_item in enumerate(p1_questions):
-      ans_choice = st.radio(
-          q_item["q"], q_item["options"], key=f"form_p1_q_{idx}"
-      )
-      p1_answers.append(q_item["options"].index(ans_choice))
-
-    st.subheader("PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)")
-    st.markdown(
-        "*Quy chế tính điểm:* Đúng hết 4 ý = 1.0đ | Sai 1 ý = 0.5đ | Sai 2 ý ="
-        " 0.25đ | Sai 3 ý = 0.1đ | Sai 4 ý = 0.0đ"
-    )
-
     p2_data = [
         (
             "Câu 1: Cho hàm số lượng giác $y = \\sin x$.",
@@ -555,7 +611,7 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
                 "Hiệu $u_{10} - u_5 = 15$",
             ],
             [
-                "Sai: $u_4 = u_1 + 3d = 2 + 3(3) = 11$ -> À, câu này Đúng!",
+                "Đúng: $u_4 = u_1 + 3d = 2 + 3(3) = 11$.",
                 "Đúng: $u_n = 2 + (n-1)3 = 3n - 1$.",
                 "Đúng: $S_5 = \\frac{5(2(2) + 4(3))}{2} = 40$.",
                 "Đúng: $u_{10} - u_5 = 5d = 5(3) = 15$.",
@@ -604,7 +660,6 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         ),
     ]
 
-    p2_choices = []
     standard_p2 = [
         [True, False, True, True],
         [True, True, True, True],
@@ -612,15 +667,6 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         [True, True, False, True],
     ]
 
-    for i, (title, sub_list, _) in enumerate(p2_data):
-      st.markdown(f"**{title}**")
-      sub_ans = []
-      for j, sub_text in enumerate(sub_list):
-        val = st.checkbox(f"Ý {chr(97+j)}) {sub_text}", key=f"form_p2_{i}_{j}")
-        sub_ans.append(val)
-      p2_choices.append(sub_ans)
-
-    st.subheader("PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 1.5 điểm)")
     p3_questions = [
         (
             "Câu 1: Tính tổng 10 số hạng đầu của cấp số cộng có $u_1 = 1, d ="
@@ -657,96 +703,95 @@ elif menu == "8. 📝 Thi thử trắc nghiệm chuẩn cấu trúc THPT mới":
         "Vì $-1 \\le \\sin x \\le 1 \\implies \\max y = 3(1) + 4 = 7$.",
     ]
 
-    p3_answers = []
-    for i, q_text in enumerate(p3_questions):
-      val = st.text_input(q_text, key=f"form_p3_{i}")
-      p3_answers.append(val.strip())
-
-    submitted = st.form_submit_button(
-        "📤 Nộp bài và Xem đáp án chi tiết", type="primary"
-    )
-
-  if submitted:
-    # --- CHẤM ĐIỂM & HIỂN THỊ CHI TIẾT ĐÁP ÁN ---
-    st.markdown("---")
-    st.header("📊 KẾT QUẢ VÀ ĐÁP ÁN CHI TIẾT BÀI THI")
-
-    # Phần I
-    score_p1 = 0.0
-    st.subheader("📌 PHẦN I: Trắc nghiệm nhiều lựa chọn")
-    for i in range(18):
-      q = p1_questions[i]
-      user_ans = p1_answers[i]
-      correct_ans = q["ans"]
-      is_correct = user_ans == correct_ans
-      if is_correct:
-        score_p1 += 0.25
-        st.success(f"**{q['q']}** 👉 Bạn chọn: **{q['options'][user_ans]}** (Chính xác ✅)")
-      else:
-        st.error(
-            f"**{q['q']}** 👉 Bạn chọn: **{q['options'][user_ans]}** | Đáp án"
-            f" đúng: **{q['options'][correct_ans]}** ❌"
-        )
-      st.info(f"💡 **Lời giải:** {q['explain']}")
-
-    # Phần II
-    score_p2 = 0.0
-    st.subheader("📌 PHẦN II: Trắc nghiệm Đúng / Sai")
-    for i in range(4):
-      title, sub_list, sub_explains = p2_data[i]
-      correct_count = sum(
-          1 for j in range(4) if p2_choices[i][j] == standard_p2[i][j]
+    with st.form("exam_form"):
+      st.subheader(
+          "PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (18 câu - 4.5 điểm)"
       )
-      p2_score_item = 0.0
-      if correct_count == 4:
-        p2_score_item = 1.0
-      elif correct_count == 3:
-        p2_score_item = 0.50
-      elif correct_count == 2:
-        p2_score_item = 0.25
-      elif correct_count == 1:
-        p2_score_item = 0.10
-      score_p2 += p2_score_item
-
-      st.markdown(f"**{title}** (Đạt {p2_score_item}đ / 1.0đ)")
-      for j in range(4):
-        u_val = p2_choices[i][j]
-        c_val = standard_p2[i][j]
-        status = "✅ Đúng" if u_val == c_val else "❌ Sai"
-        st.write(
-            f"- Ý {chr(97+j)}: Bạn chọn **{u_val}** (Đáp án chuẩn: **{c_val}**) -"
-            f" {status} | *Giải thích:* {sub_explains[j]}"
+      p1_answers = []
+      for idx, q_item in enumerate(p1_questions):
+        ans_choice = st.radio(
+            q_item["q"], q_item["options"], key=f"form_p1_q_{idx}"
         )
+        p1_answers.append(q_item["options"].index(ans_choice))
 
-    # Phần III
-    score_p3 = 0.0
-    st.subheader("📌 PHẦN III: Trắc nghiệm trả lời ngắn")
-    for i in range(6):
-      u_val = p3_answers[i]
-      c_val = standard_p3[i]
-      is_c = u_val == c_val
-      if is_c:
-        score_p3 += 0.25
-        st.success(f"**{p3_questions[i]}** 👉 Bạn trả lời: **{u_val}** (Chính xác ✅)")
-      else:
-        st.error(
-            f"**{p3_questions[i]}** 👉 Bạn trả lời: **{u_val}** | Đáp án chuẩn:"
-            f" **{c_val}** ❌"
+      st.subheader(
+          "PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)"
+      )
+      st.markdown(
+          "*Quy chế tính điểm:* Đúng hết 4 ý = 1.0đ | Sai 1 ý = 0.5đ | Sai 2 ý"
+          " = 0.25đ | Sai 3 ý = 0.1đ | Sai 4 ý = 0.0đ"
+      )
+
+      p2_choices = []
+      for i, (title, sub_list, _) in enumerate(p2_data):
+        st.markdown(f"**{title}**")
+        sub_ans = []
+        for j, sub_text in enumerate(sub_list):
+          val = st.checkbox(f"Ý {chr(97+j)}) {sub_text}", key=f"form_p2_{i}_{j}")
+          sub_ans.append(val)
+        p2_choices.append(sub_ans)
+
+      st.subheader(
+          "PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 1.5 điểm)"
+      )
+      p3_answers = []
+      for i, q_text in enumerate(p3_questions):
+        val = st.text_input(q_text, key=f"form_p3_{i}")
+        p3_answers.append(val.strip())
+
+      submitted = st.form_submit_button(
+          "📤 Nộp bài và Xem đáp án chi tiết", type="primary"
+      )
+
+    if submitted:
+      # Tính điểm Phần I
+      score_p1 = sum(
+          0.25
+          for i in range(18)
+          if p1_answers[i] == p1_questions[i]["ans"]
+      )
+
+      # Tính điểm Phần II
+      score_p2 = 0.0
+      p2_item_scores = []
+      for i in range(4):
+        correct_count = sum(
+            1 for j in range(4) if p2_choices[i][j] == standard_p2[i][j]
         )
-      st.info(f"💡 **Hướng dẫn giải:** {explain_p3[i]}")
+        p2_score_item = 0.0
+        if correct_count == 4:
+          p2_score_item = 1.0
+        elif correct_count == 3:
+          p2_score_item = 0.50
+        elif correct_count == 2:
+          p2_score_item = 0.25
+        elif correct_count == 1:
+          p2_score_item = 0.10
+        score_p2 += p2_score_item
+        p2_item_scores.append(p2_score_item)
 
-    total_score = score_p1 + score_p2 + score_p3
-    st.markdown("---")
-    st.header(f"🏆 TỔNG ĐIỂM CỦA BẠN: {total_score:.2f} / 10.0 ĐIỂM")
-    st.metric("Điểm Phần I", f"{score_p1:.2f} / 4.5đ")
-    st.metric("Điểm Phần II", f"{score_p2:.2f} / 4.0đ")
-    st.metric("Điểm Phần III", f"{score_p3:.2f} / 1.5đ")
+      # Tính điểm Phần III
+      score_p3 = sum(0.25 for i in range(6) if p3_answers[i] == standard_p3[i])
+      total_score = score_p1 + score_p2 + score_p3
 
-    if total_score >= 8.0:
-      st.balloons()
-      st.success("🎉 Xuất sắc! Bạn đạt kết quả loại Giỏi/Xuất sắc.")
-    else:
-      st.info("💡 Xem lại phần giải thích chi tiết ở trên để khắc phục các lỗi sai nhé!")
+      # Lưu vào session_state để hiển thị sau khi rerun
+      st.session_state.submitted = True
+      st.session_state.total_score = total_score
+      st.session_state.score_p1 = score_p1
+      st.session_state.score_p2 = score_p2
+      st.session_state.score_p3 = score_p3
+      st.session_state.p1_questions = p1_questions
+      st.session_state.p1_answers = p1_answers
+      st.session_state.p2_data = p2_data
+      st.session_state.p2_choices = p2_choices
+      st.session_state.standard_p2 = standard_p2
+      st.session_state.p2_item_scores = p2_item_scores
+      st.session_state.p3_questions = p3_questions
+      st.session_state.p3_answers = p3_answers
+      st.session_state.standard_p3 = standard_p3
+      st.session_state.explain_p3 = explain_p3
+
+      st.rerun()
 
 st.markdown("---")
 st.markdown(
